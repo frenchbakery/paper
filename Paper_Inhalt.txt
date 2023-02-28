@@ -1,0 +1,36 @@
+Thema: Passwörter
+
+
+Structure::::
+
+Abstract: um was gehts (cybersecurity, speziell passwörter) und warum schreibt man das(botball)  
+
+Introduction: um was wird es im paper gehen - eine Art Zusammenfassung(Hat signitzer geschrieben)
+
+State of art:	-->Allgemein:   Flächendeckende Nutzung von Passwörtern (auf SSH verweißen - Bezug auf Robotik)
+			   Probleme:    Probleme von Passwörtern (lazy humans)
+			   Current SOA  Neueste Technologie der Passwörter (2 Faktor Authenifizierung mit Passkeys)
+			   Future SOA   Zukunft von Passwörtern --> Passkey (https://fidoalliance.org/passkeys/; https://developer.apple.com/passkeys/; https://www.passkeys.io/; https://developers.google.com/identity/passkeys?hl=de; ...)
+			   P. Managen   Alternativen wie man gut Passwörter Managen kann (Analog; mit Password Safe)
+			   PS 	    Verschiedene Password Safes und Vorteile/Nachteile davon(KeepassXC - https://keepassxc.org/; one password - https://1password.com/de/;...;)
+
+Concept and Implementation for best practise:
+Schritt für Schritt Anleitung wie man sein System auf neuesten stand bringt
+1. Checken ob sein Passwort schon gebreached wurde 
+2. Ein gutes Master Passwort erstellen
+
+Conclusion: ?
+
+State of art research sources:
+https://tech.co/password-managers/how-many-passwords-average-person
+https://tech.co/password-managers/how-many-passwords-average-person (beweiß für research)
+https://www.passwordmanager.com/most-common-passwords-latest-2022-statistics/ (liste für 10 häufigsten passwörter 2022)
+https://authy.com/what-is-2fa/
+
+
+
+Links die ich beim ersten Document verwendet hab:
+Fürs Intro: https://www.nomios.com/news-blog/password-problem/
+		https://www.iproov.com/blog/forgotten-passwords-increasing-websites-abandonment-rate
+		Für Aufzählung von Passwörtern: https://www.cnbc.com/2022/11/23/most-common-passwords-of-2022-make-sure-yours-isnt-on-the-list.html
+Passwort save: https://pwsafe.org/
