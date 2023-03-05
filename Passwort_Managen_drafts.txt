@@ -1,0 +1,10 @@
+If user don't want or can't to use passkeys there are diffrent options how they could protect their sensitive information.
+User can write their passwords with account info into a booklet. The passwords would be unique and strong. It's a really simple idea but also has a lot of drawbacks. 
+For example:
+
+User need to carry the booklet with them everywhere. If not they can't always access their accounts.
+User can lose the booklet. If that happens they can't access any of their accounts anymore.
+It's not a really clear way of organizing passwords. Once something is written down user can't change the position in the booklet. So users would have to search for each
+passoword for indefinite time before they find it.
+
+The other option is a password safe.  

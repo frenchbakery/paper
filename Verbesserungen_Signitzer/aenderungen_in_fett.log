@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.2.23)  5 MAR 2023 15:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.2.23)  4 MAR 2023 10:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**cyber_security_passwords.tex
-(./cyber_security_passwords.tex
+**aenderungen_in_fett.tex
+(./aenderungen_in_fett.tex
 LaTeX2e <2022-11-01> patch level 1
 L3 programming layer <2023-02-07>
 (c:/texlive/2022/texmf-dist/tex/latex/ieeetran/IEEEtran.cls
@@ -263,8 +263,8 @@ File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count282
 \l__pdf_internal_box=\box55
 )
-No file cyber_security_passwords.aux.
-\openout1 = `cyber_security_passwords.aux'.
+(./aenderungen_in_fett.aux)
+\openout1 = `aenderungen_in_fett.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
 LaTeX Font Info:    ... okay on input line 12.
@@ -280,6 +280,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
 LaTeX Font Info:    ... okay on input line 12.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
 LaTeX Font Info:    ... okay on input line 12.
+
 -- Lines per column: 56 (exact).
 (c:/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -303,14 +304,14 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Calculating math sizes for size <11> on input line 46.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 46.
+LaTeX Font Info:    Calculating math sizes for size <11> on input line 22.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 22.
 
 
 (c:/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 46.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 22.
 
 
 (c:/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -319,33 +320,38 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 121--126
+Underfull \hbox (badness 10000) in paragraph at lines 102--109
 
  []
 
 [2]
-Underfull \hbox (badness 2119) in paragraph at lines 163--164
+Underfull \hbox (badness 2119) in paragraph at lines 146--147
 []\OT1/ptm/m/n/10 Thirdly you can change let-ters into num-bers.
  []
 
 
-Underfull \hbox (badness 1742) in paragraph at lines 163--164
+Underfull \hbox (badness 1742) in paragraph at lines 146--147
 \OT1/ptm/m/n/10 A "s" gets changes into a "5", an "e" gets
  []
 
 
-Underfull \hbox (badness 1565) in paragraph at lines 164--165
+Underfull \hbox (badness 1565) in paragraph at lines 147--148
 \OT1/ptm/m/n/10 bol into one such as "a" to "@" or "s" to
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--168
+Underfull \hbox (badness 10000) in paragraph at lines 150--151
 \OT1/ptm/m/n/10 In the end you would end up with a
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--168
-\OT1/ptm/m/n/10 pass-word like "ILuv@ppl5@ndB@n@n@5" or
+Underfull \hbox (badness 10000) in paragraph at lines 150--151
+\OT1/ptm/m/n/10 passphrase like "ILuv@ppl5@ndB@n@n@5" or
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 161--162
+[]\OT1/ptm/m/n/8 KeepassXC, Open source pass-word man-ager, URL:
  []
 
 
@@ -359,22 +365,22 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[3] (./cyber_security_passwords.aux) ) 
+[3] (./aenderungen_in_fett.aux) ) 
 Here is how much of TeX's memory you used:
- 4199 strings out of 476029
- 65561 string characters out of 5794164
+ 4204 strings out of 476029
+ 65580 string characters out of 5794164
  1868340 words of memory out of 5000000
- 24616 multiletter control sequences out of 15000+600000
+ 24619 multiletter control sequences out of 15000+600000
  549792 words of font info for 106 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,11n,62p,482b,333s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{c:/texlive/2022/texmf-dist/fonts/enc/dvi
-ps/base/8r.enc}<c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7
-.pfb><c:/texlive/2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2
-022/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb><c:/texlive/2022/texmf-dist/fo
-nts/type1/urw/times/utmr8a.pfb><c:/texlive/2022/texmf-dist/fonts/type1/urw/time
-s/utmri8a.pfb>
-Output written on cyber_security_passwords.pdf (3 pages, 74231 bytes).
+ 57i,11n,62p,582b,333s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{c:/texlive/2022/texmf-dist/fonts/enc/dvips/ba
+se/8r.enc}<c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
+<c:/texlive/2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2022/t
+exmf-dist/fonts/type1/urw/times/utmbi8a.pfb><c:/texlive/2022/texmf-dist/fonts/t
+ype1/urw/times/utmr8a.pfb><c:/texlive/2022/texmf-dist/fonts/type1/urw/times/utm
+ri8a.pfb>
+Output written on aenderungen_in_fett.pdf (3 pages, 79608 bytes).
 PDF statistics:
  40 PDF objects out of 1000 (max. 8388607)
  24 compressed objects within 1 object stream

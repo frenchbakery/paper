@@ -1,0 +1,20 @@
+Future State of art:
+In the future passwords will likely be replaced by passkeys because they are easier to use, securer, faster and work on almost every device a user could have.
+
+
+What is a passkey (Connection with 2factorA.)\\
+A passkey is similar to the 2-factor-authentication without the first factor. The second and only factor is the users device's security method such as a pin or a biometirc
+sensor (fingerprint, face scan).
+
+Function:
+The passkey is hardware specific, which means user always need to carry their device (that the passkey is installed on) with them. If user want to use passkey on 
+their laptop they need to verify themselves with their phone. This eliminates phishing, credential stuffing and other remote attacks. 
+
+In conlusion when a user is asked to sign-in to an app or website, the user approves the sign-in with the same biometric or PIN that the user has to unlock the device 
+(phone, computer or security key). The app or website can use this mechanism instead of the traditional (and insecure) username and password. 
+
+
+
+example for a provider that already advertizes for passkeys
+noch nicht verwendet - vllt später wenn zu wenig text
+

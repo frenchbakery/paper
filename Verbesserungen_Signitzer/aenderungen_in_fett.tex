@@ -13,42 +13,21 @@
 
 \title{The role of passwords in cybersecurity}
 
-%\author{\IEEEauthorblockN{1\textsuperscript{st} Lilo Zobl}
-%\IEEEauthorblockA{\textit{Botball Team HTL Anichstraße } \\
-%\textit{HTL Anichstraße}\\
-%Innsbruck, Austria \\
-%lzobl@tsn.at}}
 \author{\IEEEauthorblockN{1\textsuperscript{st} Lilo Zobl}
-\IEEEauthorblockA{\textit{Botball Team HTL Anichstraße} \\
+\IEEEauthorblockA{\textit{Botball Team HTL Anichstraße } \\
 \textit{HTL Anichstraße}\\
 Innsbruck, Austria \\
-lzobl@tsn.at}
-\and
-\IEEEauthorblockN{2\textsuperscript{nd} Matteo Reiter}
-\IEEEauthorblockA{\textit{Botball Team HTL Anichstraße} \\
-\textit{HTL Anichstraße}\\
-Innsbruck, Austria \\
-mareiter@tsn.at}
-\and
-\IEEEauthorblockN{3\textsuperscript{rd} Niclas Prantl}
-\IEEEauthorblockA{\textit{Botball Team HTL Anichstraße} \\
-\textit{HTL Anichstraße}\\
-Innsbruck, Austria \\
-email address or ORCID}
-\and
-\IEEEauthorblockN{4\textsuperscript{th} Lukas}
-\IEEEauthorblockA{\textit{Botball Team HTL Anichstraße} \\
-\textit{HTL Anichstraße}\\
-Innsbruck, Austria \\
-email address or ORCID}
+lzobl@tsn.at}}
 
-}
 \maketitle
 
 \begin{abstract}
 This document is part of the ECER 2023 confrence on educational robotics. It follows the topic of cybersecurity and will focus on the role of passwords.
 \end{abstract}
-\vspace{1cm}
+\vspace{2cm}
+\begin{IEEEkeywords}
+component, formatting, style, styling, insert
+\end{IEEEkeywords}
 
 \section{Introduction}
 This paper will focus on the wide use of passwords in IT-security. It will focus on the security aspect of passwords, especially on weak passwords due to user (human) laziness. \\
@@ -62,12 +41,15 @@ Finally the paper includes a best practice guide to:
 
 
 \section{State of the art}
-Passwords are used to protect sensitive information or access to hardware. For example users need to key in a user-name and password before they can access any network device over SSH. This is also the case if a client wants to access the raspberry pi inside the wombat controller remotely. 
+Passwords are used to protect sensitive information.\\
+\textbf{Passwords are used to protect sensitive information or access to hardware. done}\\
+ For example users need to key in a user-name and password before they can access any network device over SSH. This is also the case if a client wants to access the raspberry pi inside the wombat controller remotely. 
 
 \subsection{The problem with passwords}
-As mentioned above a password protects sensitive information or access to hardware like a robot. That's why it's so important to have a good, secure password. However users often are too lazy to create a strong password for every account they own. But that's not the only reason. A study from NordPass conducts that the average user has around a 100 accounts that require a unique password. \\
+As mentioned earlier/\textbf{above done} a password protects sensitive information \textbf{or access to hardware like a robot done}. That's why it's so important to have a good, secure password. However users often are too lazy to create a strong password for every account they own. \textbf{This is understandable, because as a} study from NordPass conducts, the average user has around a 100 accounts that require a unique password.\textbf{Remembering a hundred unique Passwords or more is really beyond a users capability.}\\
 Yes, the main problem is laziness but there are many other reasons why users tend to create weak pins.\\
-Every year long record gets published by different providers reviling the most used passwords. Here are the top ten used passwords of last years:
+Every year long records gets published by different providers revealing the most used passwords. Here are the top ten used passwords of last years:
+\textbf{Lilo - Quelle angeben!!!)}
 \vspace{0.5cm}
 \begin{enumerate}
 \item 123456
@@ -91,14 +73,13 @@ The second factor has different types of categories:
 \begin{itemize}
 \item \textbf{Something the user knows.}  This might be a personal question the user had to configure beforehand, a personal identification number (PIN), ect.
 \item \textbf{Something the user has.} This could be a small hardware token or smart-phone.
-\item \textbf{Something the user is.} This might include a  biometric pattern of a fingerprint, an iris scan, or a voice print. 
+\item \textbf{Something unique to the user.} This might include a  biometric pattern of a fingerprint, an iris scan, or a voice print. 
 \end{itemize}
 A common type of the 2-factor-authentication is the SMS Text-Message. After entering the password and username the user receives a unique one time passcode (OTP) via text message. They need to key in the passcode in a limited time (for example a minute). After both the first factor and second factor are correct the user gains access.
                                                                                                
 \subsection{Future state of art}
 In the future passwords will likely be replaced by passkeys because they are easier to use, securer, faster and work on almost every device.\\
-A passkey is similar to the 2-factor-authentication but without the first factor. The second and only factor is the users device's security method such as a pin or a biometric
-sensor (fingerprint, face scan). \\
+A passkey is similar to the 2-factor-authentication but without the first factor. The second and only factor is the users device's security method such as a pin or a biometric sensor (fingerprint, face scan). \\
 The passkey is hardware specific, which means user always need to carry the device (that the passkey is installed on) with them. If user want to use passkey on their laptop they need to verify their identity with their smartphone. This eliminates phishing, credential stuffing and other remote attacks. \\
 In conclusion when a user is asked to sign-in to an app or website, the user approves the sign-in with the same biometric or PIN that the user has to unlock the device 
 (phone, computer or security key). The app or website can use this mechanism instead of the traditional (and insecure) username and password. 
@@ -115,24 +96,26 @@ The other and better option is a password safe.
 
 \subsection{Password Safe}
 \subsubsection{Explanation}
-A password safe allows you to save a list of your usenames linked to the associated password. It has one master password that locks the safe. Now user only have to recall one single password instead of a huge amount.
+A password safe allows you to save a list of your usernames \textbf{and passwords for all your accounts.} It has one master password \textbf{or passphrase} that unlocks the safe. Now users only have to recall one single master passphrase instead of a huge amount of passwords.
 \subsubsection{Examples}
 \begin{itemize}
-\item \textbf{KeepassXC}\\
+\item \textbf{KeepassXC}\cite{b1}\\ \textbf{Lilo - Link angeben}\\
+URL: https://keepassxc.org/\\
 This software is developed for users with extremely high demands of secure personal data management. \\
 KeePassXC uses Advanced Encryption Standard (AES) encryption algorithm with a 256-bit key to secure the password database.\\
 The biggest difference to other password safes is that the data (password, account information and additional data such as URLs, attachments and notes) is stored in an offline, encrypted file that can be stored locally. This prevents user's data from getting leaked when a server gets hacked or breached.\\
+\textbf{The XC stands for Cross-Plattform. It is possible to use on it on Linux, Windows, macOS and Android.}
 The program is customizable. It allows its user to customize literally everything to their needs.\\
 
-\item \textbf{1Password}\\
-This password save is known for its easy to use interface and high security encryption.\\
+\item \textbf{1Password}\\ \textbf{Lilo - Link angeben}\\
+This password safe is known for its easy to use interface and high security encryption.\\ \textbf{Lili - erwähnen, das die Daten online gespeichert werden, im vergleich zu KeepassXC.}\\
 1Password uses an uncommon encryption known as dual-key encryption. If the server gets breached it's impossible for the hacker to decrypt the users sensitive information because of its two keys. The first key is the users master-key. The second key is a secret key, which is a 128-bit, machine-generated code. The secret key is generated on every device the user log into. It will only be saved on user's devices and never saved with the other pins.\\
 Depending on what account type user choose their data is stored differently. However in only one version users have the option to save their data locally. In every other option the user's data gets saved in a cloud-based vault.\\
 The interface is very user-friendly. It even generates strong passwords for accounts that are newly created.
 
 \end{itemize}
-\subsubsection{Benefits and drawbacks}
-Benefits:
+\subsubsection{Benefits and drawbacks of password safe software}
+\textbf{Benefits}:
 \begin{itemize}
 \item Security: Password safes use advanced encryption algorithms to protect user's passwords. This makes it extremely difficult for hackers to steal the passwords and gain access to user's online accounts.
 \item Convenience: Password safes store all of a user's passwords in one place, which makes it easy for them to access their accounts without having to remember multiple passwords.
@@ -140,7 +123,7 @@ Benefits:
 \item Multi-device access: Many password safes allow user to access their passwords from multiple devices, including smartphones, tablets, and computers.
 \item Password strength: Password safes often include a password generator feature, which creates strong passwords for user. This helps to ensure that their passwords are not easily guessable.
 \end{itemize}
-Drawbacks:
+\textbf{Drawbacks}:
 \begin{itemize}
 \item Single point of failure: If a user's password safe is hacked or compromised, all of their passwords are at risk. It is important to choose a password safe that has a strong encryption algorithm and to use a strong master password.
 \item Dependency: Using a password safe can make a user dependent on it for remembering passwords, which may make it difficult to remember passwords if a user is not able to access their password safe for some reason.
@@ -156,20 +139,27 @@ It can be very overwhelming to start with a secure option to manage passwords. S
 Haveibeenpwned is open source and secure. If someone searches for a breach it doesn't store the data that was typed in (an email address or phone number). It only ever retrieves the data from storage then returns it.\\
 If you have already been pawned change that password. If not you can rest assured.
 \item Pick a password safe that fits best to your needs. You can choose one of the ones mentioned above or do your own research.
-\item Create a good master password. Here is a easy way to do it: 
+\item Create a good master password \textbf{or better a master passphrase}. Here is a easy way to do it: 
 \begin{itemize}
-\item First make a sentence that easy to remember. For example "I love apples and bananas" or "Ich komme aus der Stadt Wien" if you want to use your native language.
-\item The second step is to but the sentence in dialect or slang. For example "I luv appls and bananas" or "I komm aus da Stadt Wien".
+\item \textbf{First think of something which is easy to remember}. For example "I love apples and bananas" or "Ich komme aus der Stadt Wien" if you want to use your native language.
+\item The second step is to transform the sentence in dialect or slang form. For example "I luv appls and bananas" or "I komm aus da Stadt Wien".
 \item Thirdly you can change letters into numbers. A "s" gets changes into a "5", an "e" gets changed into a "3" and an "o" gets changed into a "0". For example "Iluvappl5andbanana5" or "Ik0mmau5da5tadtWi3n".
 \item The fourth step is to add symbols to your password. Change characters that look like a symbol into one such as "a" to "@" or "s" to "?". For example "Iluv@ppl5@ndb@n@n@5" or "Ikomm@u5d@5tadtWi3n".
-\item The fourth step is to make all words start with a capital letter. This is only needed if the language you choose does not have a grammar rule for that (It's needed in English but not in German for example). 
+\item The fifth step is to make all words start with a capital letter. This is only needed if the language you choose does not have a grammar rule for that (It's needed in English but not in German for example). 
 \end{itemize}
-In the end you would end up with a password like "ILuv@ppl5@ndB@n@n@5" or "Ikomm@u5d@5tadtWi3n". This is a really secure password because it has numbers, upper case and lower case letters, symbols and more that 8 characters. This would make a strong master password that is nearly impossible to crack.
+In the end you would end up with a passphrase like "ILuv@ppl5@ndB@n@n@5" or "Ikomm@u5d@5tadtWi3n". This is a really secure password because it has numbers, upper case and lower case letters, symbols and more that 8 characters. This would make a strong master password that is nearly impossible to crack.
 \end{enumerate}
 
 
 \section{Conclusion}
 Passwords remain a widely used and convenient method of authentication, but they have significant weaknesses that make them vulnerable to attacks. While there are emerging alternatives to passwords, such as biometric authentication and passkeys, there are also challenges associated with their adoption, such as cost, compatibility, and user experience.\\
 As the cybersecurity landscape continues to evolve, it is important to explore new, innovative and especially creative approaches as well as authentication and access control, that are both secure and user-friendly.
+
+
+
+\begin{thebibliography}{00}
+\bibitem{b1} KeepassXC, Open source password manager,  URL: https://keepassXC.org
+\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
+\end{thebibliography}
 
 \end{document}
