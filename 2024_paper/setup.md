@@ -12,7 +12,9 @@ This is the underlying system for managing TeX packages.
 
 https://miktex.org/download
 
-Debian:
+On Windows just download and run the installer (according to the instructions in the first link).
+
+On Debian use the instructions one the miktex website, summarized here:
 
 ```bash
 curl -fsSL https://miktex.org/download/key | sudo tee /usr/share/keyrings/miktex-keyring.asc > /dev/null
@@ -20,9 +22,13 @@ echo "deb [signed-by=/usr/share/keyrings/miktex-keyring.asc] https://miktex.org/
 
 sudo apt update
 sudo apt install miktex
+
+# Finish installation (can also be done with gui see below)
+miktexsetup finish  # finish private setup
+initexmf --set-config-value [MPM]AutoInstall=1  # enable auto install
 ```
 
-Setup completion:
+Alternative Setup completion with GUI:
 
 - Open MiKTeX Console
 - Select "Finish private setup"
@@ -30,12 +36,6 @@ Setup completion:
 - If so, click ok, navigate to updates and click "Check for updates" and then "Update now"
 - For automatic package installation, go to Settings and for Package Installation -> Automatic installation choose "Always"
 
-Alternatively, this can be done from command line:
-
-```bash
-miktexsetup finish  # finish private setup
-initexmf --set-config-value [MPM]AutoInstall=1  # enable auto install
-```
 
 Guide on how to use MiKTeX Console: https://miktex.org/howto/miktex-console
 
@@ -45,6 +45,9 @@ Guide on how to use MiKTeX Console: https://miktex.org/howto/miktex-console
 Install this extension: james-yu.latex-workshop
 
 After that, simply put your .tex file in a folder and it can be edited. Compilation happens with green run arrow in top right.
+
+MiKTeX Automatically installs packages as soon as they are needed, so there is no need to download a huge load of packages in the beginning.
+
 
 ## Links, Info and Wrigin
 
