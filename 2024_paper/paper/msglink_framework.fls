@@ -1,6 +1,6 @@
-PWD /home/melektron/Documents/local_repos/frenchbakery/paper/2024_paper
+PWD /home/melektron/Documents/local_repos/frenchbakery/paper/2024_paper/paper
 INPUT /home/melektron/.miktex/texmfs/data/miktex/data/le/pdftex/pdflatex.fmt
-INPUT /home/melektron/Documents/local_repos/frenchbakery/paper/2024_paper/msglink_framework.tex
+INPUT /home/melektron/Documents/local_repos/frenchbakery/paper/2024_paper/paper/msglink_framework.tex
 OUTPUT msglink_framework.log
 INPUT /home/melektron/.miktex/texmfs/install/tex/latex/ieeetran/IEEEtran.cls
 INPUT /home/melektron/.miktex/texmfs/install/tex/latex/ieeetran/IEEEtran.cls

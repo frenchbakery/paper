@@ -48,6 +48,17 @@ After that, simply put your .tex file in a folder and it can be edited. Compilat
 
 MiKTeX Automatically installs packages as soon as they are needed, so there is no need to download a huge load of packages in the beginning.
 
+For Formatting to work, latexindent is used. This requires some additional perl modules to run properly. Install them according to [the documentation](https://latexindentpl.readthedocs.io/en/latest/sec-appendices.html#required-perl-modules).
+
+On Linux (assuming pearl is already installed):
+
+```bash
+sudo cpan -i App::cpanminus # press enter if it asks for [yes] the first time
+sudo cpanm YAML::Tiny
+sudo cpanm File::HomeDir
+```
+
+On Windows: May not be required as latexindent is shipped as an exe bundle.
 
 ## Links, Info and Wrigin
 
