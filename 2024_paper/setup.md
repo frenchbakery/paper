@@ -2,10 +2,7 @@
 
 This document describes the editor setup used to create the paper.
 
-(Maybe not: https://medium.com/@rcpassos/writing-latex-documents-in-visual-studio-code-with-latex-workshop-d9af6a6b2815)
-
 https://www.geekering.com/programming-languages/filipesalgueiro/how-to-write-latex-documents-using-visual-studio-code/
-
 
 ## Installation
 
@@ -31,11 +28,13 @@ Setup completion:
 - Select "Finish private setup"
 - After restart it may say: "A MiKTeX Setup issue has been detected. So Far you have not checked for MiKTeX updates. Remedy: Check for MiKTeX updates."
 - If so, click ok, navigate to updates and click "Check for updates" and then "Update now"
+- For automatic package installation, go to Settings and for Package Installation -> Automatic installation choose "Always"
 
 Alternatively, this can be done from command line:
 
 ```bash
-miktexsetup finish
+miktexsetup finish  # finish private setup
+initexmf --set-config-value [MPM]AutoInstall=1  # enable auto install
 ```
 
 Guide on how to use MiKTeX Console: https://miktex.org/howto/miktex-console
@@ -44,4 +43,16 @@ Guide on how to use MiKTeX Console: https://miktex.org/howto/miktex-console
 ### VSCode LaTeX Workshop
 
 Install this extension: james-yu.latex-workshop
+
+After that, simply put your .tex file in a folder and it can be edited. Compilation happens with green run arrow in top right.
+
+## Links
+
+Call for Papers: https://ecer.pria.at/wp-content/uploads/2024/01/2024-Call-for-Papers.pdf
+
+IEEE Template: https://www.ieee.org/conferences/publishing/templates.html <br>
+IEEE Template instructions: https://mirror.easyname.at/ctan/macros/latex/contrib/IEEEtran/IEEEtran_HOWTO.pdf
+
+
+
 
