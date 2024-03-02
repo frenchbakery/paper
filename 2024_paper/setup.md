@@ -46,12 +46,21 @@ Install this extension: james-yu.latex-workshop
 
 After that, simply put your .tex file in a folder and it can be edited. Compilation happens with green run arrow in top right.
 
-## Links
+## Links, Info and Wrigin
 
-Call for Papers: https://ecer.pria.at/wp-content/uploads/2024/01/2024-Call-for-Papers.pdf
+[Call for Papers](info/2024-Call-for-Papers.pdf) describes what is requested.<br>
+(also available [online](https://ecer.pria.at/wp-content/uploads/2024/01/2024-Call-for-Papers.pdf))
 
-IEEE Template: https://www.ieee.org/conferences/publishing/templates.html <br>
-IEEE Template instructions: https://mirror.easyname.at/ctan/macros/latex/contrib/IEEEtran/IEEEtran_HOWTO.pdf
+The [IEEE Conferencing paper template](https://www.ieee.org/conferences/publishing/templates.html) should be used.
+
+This document describes how to use the template and how a paper should be written with it: https://mirror.easyname.at/ctan/macros/latex/contrib/IEEEtran/IEEEtran_HOWTO.pdf
+
+It is most important that the .tex document starts with this:
+
+```tex
+\documentclass[conference]{IEEEtran}
+```
+
 
 
 
