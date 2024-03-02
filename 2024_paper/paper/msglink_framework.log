@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.3.2)  2 MAR 2024 12:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.3.2)  2 MAR 2024 12:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -305,17 +305,32 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 36.
  (/home/melektron/.miktex/texmfs/install/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 2285) in paragraph at lines 43--48
+Underfull \hbox (badness 1466) in paragraph at lines 38--40
+\OT1/ptm/b/n/9 insight into why what communication is needed for and
+ []
+
+
+Underfull \hbox (badness 1668) in paragraph at lines 38--40
+\OT1/ptm/b/n/9 Additionally it will cover problems and annoyances with
+ []
+
+
+Underfull \hbox (badness 1881) in paragraph at lines 38--40
+\OT1/ptm/b/n/9 currently available communication frameworks for certain
+ []
+
+
+Underfull \hbox (badness 2285) in paragraph at lines 45--50
 []\OT1/ptm/m/n/10 The present paper concentrates on the wide use of
  []
 
 
-Underfull \hbox (badness 1748) in paragraph at lines 43--48
+Underfull \hbox (badness 1748) in paragraph at lines 45--50
 \OT1/ptm/m/n/10 passwords or passphrases in IT-security, with a special
  []
 
 
-Underfull \hbox (badness 1577) in paragraph at lines 67--69
+Underfull \hbox (badness 1577) in paragraph at lines 72--74
 []\OT1/ptm/m/n/10 Sensitive information or access to hardware must be
  []
 
@@ -323,75 +338,75 @@ Underfull \hbox (badness 1577) in paragraph at lines 67--69
 
 
 ]
-Underfull \hbox (badness 5022) in paragraph at lines 72--76
+Underfull \hbox (badness 5022) in paragraph at lines 78--82
 []\OT1/ptm/m/n/10 As mentioned above, a password protects sensitive
  []
 
 
-Underfull \hbox (badness 1845) in paragraph at lines 89--91
+Underfull \hbox (badness 1845) in paragraph at lines 95--97
 []\OT1/ptm/m/n/10 But how quickly can a password really be hacked?
  []
 
 <./images/brute_force.png, id=10, 752.8125pt x 484.05844pt>
 File: ./images/brute_force.png Graphic file (type png)
 <use ./images/brute_force.png>
-Package pdftex.def Info: ./images/brute_force.png  used on input line 93.
+Package pdftex.def Info: ./images/brute_force.png  used on input line 99.
 (pdftex.def)             Requested size: 252.19661pt x 162.16241pt.
 
-Underfull \vbox (badness 5077) has occurred while \output is active []
+Underfull \vbox (badness 1242) has occurred while \output is active []
 
 <./images/PasswordMonster.png, id=11, 669.702pt x 320.99925pt>
 File: ./images/PasswordMonster.png Graphic file (type png)
 <use ./images/PasswordMonster.png>
-Package pdftex.def Info: ./images/PasswordMonster.png  used on input line 100.
+Package pdftex.def Info: ./images/PasswordMonster.png  used on input line 106.
 (pdftex.def)             Requested size: 247.78586pt x 118.76785pt.
  [2 <./images/brute_force.png> <./images/PasswordMonster.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 138--139
+Underfull \hbox (badness 10000) in paragraph at lines 156--157
 
  []
 
 <./images/KeePass.png, id=17, 301.125pt x 168.63pt>
 File: ./images/KeePass.png Graphic file (type png)
 <use ./images/KeePass.png>
-Package pdftex.def Info: ./images/KeePass.png  used on input line 140.
+Package pdftex.def Info: ./images/KeePass.png  used on input line 158.
 (pdftex.def)             Requested size: 180.67638pt x 101.17877pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 144--149
+Underfull \hbox (badness 10000) in paragraph at lines 162--167
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 151--152
+Underfull \hbox (badness 10000) in paragraph at lines 169--170
 
  []
 
 <./images/1Password-Logo.wine.png, id=18, 3011.25pt x 2007.5pt>
 File: ./images/1Password-Logo.wine.png Graphic file (type png)
 <use ./images/1Password-Logo.wine.png>
-Package pdftex.def Info: ./images/1Password-Logo.wine.png  used on input line 153.
+Package pdftex.def Info: ./images/1Password-Logo.wine.png  used on input line 171.
 (pdftex.def)             Requested size: 180.6672pt x 120.4448pt.
 
-Underfull \hbox (badness 1484) in paragraph at lines 156--161
+Underfull \hbox (badness 1484) in paragraph at lines 174--179
 \OT1/ptm/m/n/10 Depending on the account type the data is stored
  []
 
 [3 <./images/KeePass.png> <./images/1Password-Logo.wine.png>]
-Underfull \hbox (badness 3209) in paragraph at lines 166--167
+Underfull \hbox (badness 3209) in paragraph at lines 186--187
 []\OT1/ptm/b/n/10 Security: \OT1/ptm/m/n/10 Password safes use advanced encryption
  []
 
 
-Underfull \hbox (badness 3977) in paragraph at lines 170--171
+Underfull \hbox (badness 3977) in paragraph at lines 190--191
 []\OT1/ptm/b/n/10 Password strength: \OT1/ptm/m/n/10 Password safes often include
  []
 
 
-Underfull \hbox (badness 1789) in paragraph at lines 170--171
+Underfull \hbox (badness 1789) in paragraph at lines 190--191
 \OT1/ptm/m/n/10 a password generator feature, which creates strong
  []
 
 
-Underfull \hbox (badness 3088) in paragraph at lines 178--179
+Underfull \hbox (badness 3088) in paragraph at lines 199--200
 []\OT1/ptm/b/n/10 Compatibility: \OT1/ptm/m/n/10 Some password safes may not be
  []
 
@@ -401,25 +416,25 @@ Underfull \vbox (badness 1371) has occurred while \output is active []
 <./images/haveibeenpwned.png, id=24, 711.8595pt x 242.1045pt>
 File: ./images/haveibeenpwned.png Graphic file (type png)
 <use ./images/haveibeenpwned.png>
-Package pdftex.def Info: ./images/haveibeenpwned.png  used on input line 190.
+Package pdftex.def Info: ./images/haveibeenpwned.png  used on input line 218.
 (pdftex.def)             Requested size: 206.43396pt x 70.2085pt.
 
-Underfull \hbox (badness 3078) in paragraph at lines 200--201
+Underfull \hbox (badness 3078) in paragraph at lines 230--231
 []\OT1/ptm/m/n/10 The fourth step is to add symbols to your
  []
 
 
-Underfull \hbox (badness 2326) in paragraph at lines 200--201
+Underfull \hbox (badness 2326) in paragraph at lines 230--231
 \OT1/ptm/m/n/10 password. Change characters that look like a
  []
 
 
-Underfull \hbox (badness 7832) in paragraph at lines 203--204
+Underfull \hbox (badness 7832) in paragraph at lines 233--234
 \OT1/ptm/m/n/10 Finally you would end up with a passphrase
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 203--204
+Underfull \hbox (badness 10000) in paragraph at lines 233--234
 \OT1/ptm/m/n/10 like "ILuv@ppl5@ndB@n@n@5" or
  []
 
@@ -483,47 +498,47 @@ Underfull \hbox (badness 10000) in paragraph at lines 4--4
 \openout3 = `msglink_framework.lof'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 219--220
+Underfull \hbox (badness 10000) in paragraph at lines 251--252
 []\OT1/ptm/m/n/8 Information for "The problem with passwords",
  []
 
 
-Overfull \hbox (15.50125pt too wide) in paragraph at lines 221--222
+Overfull \hbox (15.50125pt too wide) in paragraph at lines 253--254
 []\OT1/ptm/m/n/8 List for most used passwords, URL:https://www.passwordmanager.com/most-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 227--228
+Underfull \hbox (badness 10000) in paragraph at lines 259--260
 []\OT1/ptm/m/n/8 KeepassXC, Open source password manager, URL:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 231--233
+Underfull \hbox (badness 10000) in paragraph at lines 263--265
 \OT1/ptm/m/n/8 https://expert.services/blog/managing-your-website/security/password-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 231--233
+Underfull \hbox (badness 10000) in paragraph at lines 263--265
 \OT1/ptm/m/n/8 https://www.orangecountyscu.org/stories/pros-and-cons-of-using-a-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 231--233
+Underfull \hbox (badness 10000) in paragraph at lines 263--265
 \OT1/ptm/m/n/8 https://www.passwordboss.com/pros-and-cons-of-using-a-password-
  []
 
 
-Overfull \hbox (8.8694pt too wide) in paragraph at lines 236--237
+Overfull \hbox (8.8694pt too wide) in paragraph at lines 268--269
 []\OT1/ptm/m/n/8 Resource for harmless example: https://www.heise.de/hintergrund/Roomba-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 236--237
+Underfull \hbox (badness 10000) in paragraph at lines 268--269
 \OT1/ptm/m/n/8 Wie-private-Fotos-eines-Staubsauger-Roboters-auf-Facebook-landen-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 238--239
+Underfull \hbox (badness 10000) in paragraph at lines 270--271
 []\OT1/ptm/m/n/8 Information for YubiKey: https://www.yubico.com/der-
  []
 
@@ -551,9 +566,9 @@ Here is how much of TeX's memory you used:
  27615 multiletter control sequences out of 15000+600000
  595574 words of font info for 110 fonts, out of 8000000 for 9000
  0 hyphenation exceptions out of 8191
- 57i,11n,65p,982b,346s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,11n,65p,982b,342s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/melektron/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/melektron/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></home/melektron/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/melektron/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/melektron/.miktex/texmfs/install/fonts/type1/urw/times/utmri8a.pfb>
-Output written on msglink_framework.pdf (5 pages, 743409 bytes).
+Output written on msglink_framework.pdf (5 pages, 743594 bytes).
 PDF statistics:
  54 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
