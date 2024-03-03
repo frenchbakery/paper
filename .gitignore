@@ -1,5 +1,5 @@
 *.log
-*.gdb_latexmk
+*.fdb_latexmk
 *.fls
 *.lof
 *.bbl
