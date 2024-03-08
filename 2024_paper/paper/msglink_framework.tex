@@ -64,7 +64,7 @@ There are two main protocols on top of IP for user applications - TCP and UDP.
 
 TCP stands for \textbf{Transmission Control Protocol} and is a connection based protocol, meaning there will be a standing connection between two hosts. Before any data can be sent over TCP, a connection has to be established during an initial handshake between both communication parties. This is done automatically in the background. Once established, a TCP connection provides a pipe-like environment for transmitting a continuous stream of data bytes. The stream is of undefined length and data sent by one host is guaranteed to be received in the same order as sent by the other (without missing bytes in between). However, since TCP "streams" bytes, it does guarantee that any block of bytes send is received in one piece.
 
-UDP stands for \textbf{User Datagram Protocol} and is . The UDP protocol finds the destination device and sends the data inform of a datagram. There is nothing set in place to ensure that the datagram reaches the destination. There is also no process set in place that tells the receiver end in which order the packets were send. A datagram has a size restriction (65.535 bytes) which the packets gets split into. \textcolor{red}{(Achtung!!!!!!!!!!!!!!!!!!!!!! wenn man mehrere geräte hat verwendet man oft eigentlich UDP da das schneller geht)}
+UDP stands for \textbf{User Datagram Protocol}. Unlike TCP, UDP does not require a connection to be established. The UDP merely sends a block of data (called the user datagram) all at once to a destination host in a single IP packet. There is nothing set in place to ensure that the packet reaches the destination. Without further protocols, UDP packets do not have any relation to each other, therefore there is no insurance of the order packets are received. Since the entire datagram is sent in one IP packet, it's maximum is restricted to the limits imposed by the latter.\textcolor{red}{(65.535 bytes)} \textcolor{red}{(Achtung!!!!!!!!!!!!!!!!!!!!!! wenn man mehrere geräte hat verwendet man oft eigentlich UDP da das schneller geht)}
 
 UDP is less reliable than TCP. Before choosing a respective protocol one has to decide if they need speed or reliability more. A common uses for UDP are videos whereas a common use for TCP are websites.
 
@@ -77,17 +77,19 @@ For this reason, it will focus higher-level protocols and frameworks based on TC
 
 While TCP communication is the basis of many point-to-point networking applications requiring data integrity, it is still rather tedious for a programmer to implement in high-level applications. The programmer still has to know how to use the OS APIs to create and manage TCP sockets and since only bytes can be sent over the socket, the programmer needs to manually serialize and deserialize internal program structures and variables to transmit them. Besides this, raw TCP is only really suited for continuous data streams, while many applications require event-based bidirectional communication where messages (blocks of data with clear boundaries) are sent back and fourth.
 
-Providing solutions for these \textcolor{red}{annoyances/problems} is the job of communication frameworks or library. A communication framework does not only implement a higher level protocol to support the additional functionality, but also provides programming language functions to integrate the functionality as seamlessly as possible with language features.
+Providing solutions for these \textcolor{red}{annoyances/problems} is the job of communication frameworks or libraries. A communication framework does not only implement a higher level protocol to support the additional functionality, but also provides programming language functions to integrate the functionality as seamlessly as possible with language features.
 
 In summary, they may provide the following services to the user:
 
 \begin{itemize}
-    \item Abstraction of low-level socket APIs, exposing the most important functionality and automatically handle the rest in the background (according to common use-cases)
-    \item Automatic management of connection state, handling disconnects and reconnects
+    \item Abstraction of low-level socket APIs, exposing the most important functionality and automatically handle the rest in the background (according to common use-cases) including but not limited to:
+    \begin{itemize}
+        \item Automatic management of connection state, handling disconnects and reconnects
+    \end{itemize}
     \item Provide a way to exchange messages, which are blocks of data of a known (but still possibly dynamic) length, guaranteeing arrival in same grouping and order as sent
     \item Provide facilities to serialize and deserialize language-native data structures to easily send them over the network (with the least code possible)
     \item Provide data validation for sent and received messages according to programmer defined schemas (in language native format as far as possible), so the user code can trust received data to be in valid format.
-    \item Provide additional, commonly used communication schemes that further simplify common use cases of network communication for the developer such as Remote Procedure Calls (RPCs)
+    \item Provide additional, commonly used communication schemes such as Remote Procedure Calls (RPCs) that further simplify common use cases of network communication for the developer
 \end{itemize}
 
 \section{State of the Art}
