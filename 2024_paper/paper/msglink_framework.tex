@@ -176,7 +176,7 @@ The work described in this paper aims to create a communication framework to sol
     \item Provide a way to exchange messages, which are blocks of data of a known (but still possibly dynamic) length, guaranteeing arrival in same grouping and order as sent
     \item Provide facilities to serialize and deserialize language-native data structures to easily send them over the network with the least code possible
     \item Provide data validation for sent and received messages according to programmer defined schemas (in language native format as far as possible), so the user code can trust received data to be in valid format.
-    \item Provide additional, commonly used communication schemes such as metadata exchange or Remote Procedure Calls (RPCs) that further simplify common use cases of network communication for the developer
+    \item Provide additional, commonly used communication schemes and primitives such as metadata exchange or Remote Procedure Calls (RPCs). These further simplify common practices within network communication for the developer
 \end{enumerate}
 
 
@@ -274,19 +274,84 @@ Although this protocol stack satisfies the most important goals listed, it still
 
 \section{Solution and Design Overview}
 
-To solve the before mentioned problems, and implement the last missing goals, the top-level protocol in the stack (Socket.IO) will be replaced by a new protocol with language support libraries which has been named \textbf{msglink}.
+To solve the before mentioned problems, and implement the last missing goals of data validation and more, the top-level protocol in the stack (Socket.IO) will be replaced by a new protocol with language support libraries which has been named \textbf{msglink}.
 
 msglink will build on top of WebSockets, implementing all features of Socket.IO that are relevant to achieve the listed goals. In addition it will add direct framework support for more commonly used communication schemes.
 
-This section will cover the core principles of the msglink framework and how it solves the problems and implements the goals listed above.
+\textcolor{red}{remove this paragraph?}
+It should be noted here, that msglink is a point-to-point communication protocol, like WebSocket and Socket.IO. Socket.IO provides the ability to send events from a server to multiple connected clients, which is possible to implement using msglink but is not a primary goal and will not be covered here.
+
+These are the core principles of the msglink framework:
+
+\begin{itemize}
+    \item Simple API
+    \item Automatic state management
+    \item Platform independence
+    \item Data validation
+    \item Strict type-safety
+    \item Communication party equality
+    \item Provision of common communication primitives
+    \item Bandwidth efficiency
+\end{itemize}
+
+
+\section{Implementation}
+
+This section will cover how the the core principles of the msglink framework work and how they solve the problems and implement the goals listed above.
+
 
 \subsection{Simple API}
 
 Similar to the protocols and accompanying libraries listed above (especially Socket.IO), msglink tries to achieve it's core functionality with the least code possible using a declarative API. Rather than writing code explicitly stating how to perform the serialization, validation or communication step-by-step (imperative programming), the developer writes code specifying (declaring) what result is expected (declarative programming).
 
-Like Socket.IO, to connect an msglink client to a server, one only has to specify 
+Like Socket.IO, to connect an msglink client to a server, one only has to specify what server the client should \textbf{be connected to} and the library will automatically handle connection and reconnection in case of connection loss. 
 
-\section{Implementation}
+
+\subsection{Automatic state management}
+
+Like Socket.IO, msglink uses a heartbeat (ping-pong) system to determine when the connection drops. This happens internally and requires no code from the user. It works by sending a small message back and fourth every few seconds. In msglink, the server is responsible for sending this so called "ping" message to the client. If the client doesn't respond with the corresponding "pong" message withing a certain time, the connection is dropped. Similarly, if the client doesn't receive a ping in a certain amount of time, it drops the connection on it's side and attempts to reconnect automatically.
+
+
+\subsection{Platform independence}
+
+msglink should be able to be used with different programming languages and on any operating system. All implementations should be able to communicate with each other.
+
+
+\subsection{Data validation and strict type-safety}
+
+A key feature of msglink is the above discussed integrated data validation, along with other type-safety features (as far as the specific programming language allows).
+
+Even though msglink is the top-level protocol in the newly defined protocol stack, the end-user application's communication itself also happens according to some protocol, defined by the application developer. The job of the communication framework (msglink) is, to make the implementation and definition of this protocol as simple as possible. In msglink, this user-level protocol is called the \textbf{link}.
+
+Unlike Socket.IO, msglink requires this link to be fully defined in a static manner, meaning the programmer has to explicitly state the existence and associated data structure of every communication primitive (e.g. an event, but msglink has others as well) before it can be used for communication. In case of an event, that would mean explicitly stating that an event with a given name exists, wether it can be emitted or just be received and providing the schema for the data structure transmitted with the event. All of these definitions have to happen statically, so that (for applicable languages) the entire structure of the link (user protocol) is known at compile time. This gives the library the ability to automatically perform validation of the communication and serialization/deserialization of the data from/into language-native formats, even for statically typed languages like C++, without the developer having to manually perform any of those steps.
+
+In msglink, both communication parties have to define the link from their perspective of the communication. This means for example, that an incoming event on one side has to have a matching outgoing event on the other side. When connecting, msglink performs a link-compatibility check, to make sure both parties have defined a compatible protocol. If the two links are not compatible, the connection is aborted before trying to sending any user data.
+
+One of the goals for msglink is, to keep the definition of this link entirely native to the language, so no extra build step is required to generate code from the definition. This has the slight disadvantage of possibly having to write the same schemas with two different syntaxes. 
+
+
+\subsection{Party equality}
+
+In msglink, both communication parties (client and server) are treated equally. Apart from a few internal details, after a msglink connection is established, both parties can perform the exact same actions, in the bounds of what is defined by the link.
+
+
+\subsection{Common communication primitives}
+
+msglink defines three commonly used communication primitives that a programmer can use to create the user-protocol.
+
+\begin{itemize}
+    \item \textbf{Events} work in the same way as they do with Socket.IO, with the exception of having to define them and their data structure statically.
+    \item \textbf{Remote Function Calls} can be viewed as two events with opposite directions. One "call" event and one "result" event. RFCs work as the name implies. One the called (receiving) side of the communication defines a function taking some input data (statically defined by schema) and returning some result data (also defined by a schema). Since a traditional function cannot yield multiple results, there can only be one handler function. The other side of the communication can remotely call the function over the network, efficiently using asynchronous abilities of a language if available so the remote function call can be used almost as seamlessly as a local one. The framework automatically handles the matching of results to pending calls so data is not mixed up. Other framework typically call these Remote Procedure Calls (RPCs), though "function" was chosen for msglink as it clarifies the fact that the call always yields some result data.
+    \item \textbf{Data Sources} can be imagined as functions which can be called with some initial input data, that can follow up with more results over time until canceled. This might seem confusing at first, but it is useful for implementing dynamic subscription models. This is best explained using an example: \textit{A web dashboard manages 100 servo actuators and needs to display live updates of their positions. Always transmitting the position of each results is too much traffic. Since only 5 can be displayed on screen at a time, a protocol needs to be implemented to activate or deactivate the updates for each when shown or hidden.} This could be implemented manually using a "sub", "unsub" and "update" event, providing the actuator ID in the "update" event. msglink abstracts and standardizes this however. In the UI component requiring the data of a specific actuator, a data source listener could be registered with the actuator ID as an input argument. This can be imagined as the function being called with the actuator ID as a parameter, and the function then following up with a new result event every time the actuator position updates.
+\end{itemize}
+
+
+\subsection{Bandwidth efficiency}
+
+At the time of writing, the msglink protocol uses JSON to encode it's internal messages as well as user data. This is not very bandwidth efficient, especially when long attribute names are used, which is helpful for development purposes but may be improved in the future. 
+
+Never the less, msglink tries to perform the communication as efficiently as possible by only transmitting data over the network that is actually required. For example, the msglink framework internally tracks whether an event currently has any listeners and informs the other communication party if there are any. If there are no listeners, the event doesn't need to be transmitted over the network, even if one is emitted. A similar concept applies to data sources.
+
 
 \section{Results and Applications}
 
