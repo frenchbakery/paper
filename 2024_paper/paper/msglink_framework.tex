@@ -11,7 +11,8 @@
 % next 2 needed for code blocks
 \usepackage{listings}
 %\usepackage{etoolbox}  % needed for number detection, but didn't work reliably
-
+% for URLs
+\usepackage{url}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -131,17 +132,8 @@
 
 \section{Introduction}
 
-When it comes to computer science and robotics, sooner or later, multiple computers need to communicate with each other. In many cases this communication is achieved over a computer network. Nowadays this is typically implemented using the internet protocol (IP).
+When it comes to computer science and robotics, sooner or later, multiple computers need to communicate with each other. In many cases this is achieved over a computer network. Nowadays this is typically implemented using the internet protocol (IP).
 
-\subsection{IP Networks}
-
-Without going into detail of how the Internet Protocol or any of it's underlying technologies work (out of the scope of this paper), this section provides a quick overview of IP.
-
-In an IP network, every participating communication party (so called "host",such as a computer) is assigned an IP Address. The IP address is the lowest level of addressing most user-level applications have to deal with. It is a 32-Bit number typically expressed by four octets (bytes) in dot notation: \textbf{192.168.1.1}
-
-The Internet Protocol provides the foundations for transmitting data between hosts on a network (or possibly multiple networks) in terms of IP network packets. These contain among other details, the sender and receiver addressing information and a block of data to be transmitted between the hosts. The operating system's network stack and other networking hardware then switch and route the packet from the sender to the desired destination host.
-
-When  developing applications however, the programmer almost never has to worry about the working of these underlying systems. Instead, they use higher level protocols build on top of IP, which abstract abstract IP packets and allow programmers to more conveniently achieve the desired functionality.
 
 \subsection{TCP and UDP protocols}
 
@@ -185,28 +177,28 @@ The following section explains a typical protocol stack used for web apps, since
 
 \subsection{Hyper Text Transfer Protocol (HTTP)}
 
-\textbf{HTTP} builds on top of TCP. This protocol is used to transmit files and other chunks of data (such as JSON documents) between servers or between servers and a browser. One limitation is that HTTP is (mostly) unidirectional communication. HTTP works by the client connecting to a server using TCP and then sending an \textbf{HTTP Request}. The request consists of at least one line of human readable text denoting the requested resource (like an HTML file) and some optional parameters, called headers. The end of the request is identified by a CRLF sequence (an empty line of text). Depending on the request details, the server may then answers with some status code, response headers and finally the requested data.
+\textbf{HTTP} builds on top of TCP. This protocol is used to transmit files and other chunks of data (such as JSON documents) between servers or between servers and a browser. One limitation is that HTTP is (mostly) unidirectional. HTTP works by the client connecting to a server using TCP and then sending an \textbf{HTTP Request}. The end of the request is identified by a CRLF sequence (an empty line of text). Depending on the request details, the server may then answers with some status code, response headers and finally the requested data. \cite{http-mdn}
 
 There are libraries for most programming languages, allowing the programmer to send and listen for HTTP request with very little code, varying depending on language.
 
 \begin{code-js}
-// JavaScript
+// JavaScript example request
 let resp = await fetch("http://10.5.5.5/");
 \end{code-js}
 
-By automatically handling TCP connection establishment and implementing a way to transfer connection metadata and status codes, HTTP already implements parts of point 1) and 5) of the before mentioned goals for a communication framework.
+By automatically handling TCP connection establishment and implementing a way to transfer connection metadata and status codes, HTTP already implements parts of point 1) and 5) of the before mentioned goals for a communication framework. \cite{http-mdn}
 
 
 \subsection{WebSockets}
 
-\textbf{WebSockets} are a bidirectional communication protocol building on top of and somewhat besides HTTP. A WebSocket works by first establishing a TCP connection and sending an HTTP request to a server. However instead of requesting or transmitting a resource directly, the client requests the server to change the protocol on top of the already open TCP socket to the WebSocket protocol using HTTP protocol upgrade headers. Since browsers don't allow web pages and web applications to create TCP sockets directly, this is the only way to create a long-term bidirectional communication channel between the browser and a server application. 
+\textbf{WebSockets} are a bidirectional communication protocol building on top of and somewhat besides HTTP. A WebSocket works by first establishing a TCP connection and sending an HTTP request to a server. However instead of requesting or transmitting a resource directly, the client requests the server to change the protocol on top of the already open TCP socket to the WebSocket protocol using HTTP protocol upgrade headers. Since browsers don't allow web pages and web applications to create TCP sockets directly, this is the only way to create a long-term bidirectional communication channel between the browser and a server application. \cite{b3}
 
-The WebSocket protocol however doesn't expose the raw stream socket to the programmer, instead it introduced the concept of messages, hereby implementing point 2) of the goals for a communication framework. A message is a self contained chunk of data (typically a string, raw binary is also possible) the transmission of which over the socket is transparent to the user. When the programmer sends messages, they guaranteed to arrive at the other communication party in one piece and in order in a message handler.
+The WebSocket protocol however doesn't expose the raw stream socket to the programmer, instead it introduced the concept of messages, hereby implementing point 2) of the goals for a communication framework. A message is a self contained chunk of data (typically a string, raw binary is also possible) the transmission of which over the socket is transparent to the user. When the programmer sends messages, they are guaranteed to arrive at the other communication party in one piece and in order. \cite{b3}
 
-Like with HTTP, many languages provide simple APIs to create and use WebSocket connections. 
+Like with HTTP, many languages provide simple APIs to create and use WebSocket connections.
 
 \begin{code-js}
-// JavaScript
+// JavaScript WS client example snippets
 // connect
 let socket = new WebSocket("ws://10.5.5.5/");
 // send message
@@ -216,11 +208,12 @@ socket.onmessage = (e) => {
     console.log(e.data);
 }
 \end{code-js}
-\cite{b3}
+\cite{ws-client-mdn}
+
 
 \subsection{Socket.IO}
 
-\textbf{Socket.IO} again builds on top of WebSockets and is the last protocol in the here-described stack. Socket.IO works on the principle of sending events over the network. An event can be imagined like a message consisting of an \textbf{event name} and some \textbf{event data}. Events are identified by their name and there can be multiple different event names in an active connection. As soon as the connection between the server and client is established, both sides can \textbf{emit} and \textbf{listen} for events identified by their name. Listening works by registering callback (handler) functions, to be called when a specific event is received (i.e. emitted by the other communication party). When emitting an event, one can also send some additional data with it, which will be passed to the listener functions.
+\textbf{Socket.IO} again builds on top of WebSockets and is the last protocol in the here-described stack. Socket.IO works on the principle of sending events over the network. An event can be imagined like a message consisting of an \textbf{event name} and some \textbf{event data}. Events are identified by their name and there can be multiple different event names in an active connection. As soon as the connection between the server and client is established, both sides can \textbf{emit} and \textbf{listen} for events identified by their name. Listening works by registering callback (handler) functions to be called when a specific event is received (i.e. emitted by the other communication party). When emitting an event, one can also send some additional data with it, which will be passed to the listener functions. \cite{b1}
 
 Thanks to support libraries for multiple programming languages, Socket.IO also provides the functionality to serialize and deserialize the data to language-native structures (at least for some languages) and therefore partially satisfies goal 3). All this functionality can be achieved with very little code.
 
@@ -235,7 +228,7 @@ socket.on("event2", (arg1, arg2, ...) => {
 })
 \end{code-js}
 
-Socket.IO also further implements the abstractions outlined by goal 1) of a communication framework, by implementing automatic connection state management and reconnects. Where with WebSockets, the programmer explicitly needs to write code to \textbf{connect to a server},  \textbf{detect disconnects}, and repeat the procedure, with Socket.IO, the programmer is merely required to tell the computer to \textbf{"be connected to a specified server"}. The library will then connect, detect failures and reconnect automatically to satisfy this request. \cite{b1}
+Socket.IO also further implements the abstractions outlined by goal 1) of a communication framework, by implementing automatic connection state management and reconnects. Where with WebSockets the programmer explicitly needs to write code to \textbf{connect to a server},  \textbf{detect disconnects}, and repeat the procedure, with Socket.IO the programmer is merely required to tell the computer to \textbf{"be connected to a specified server"}. The library will then connect, detect failures and reconnect automatically to satisfy this request. 
 
 
 \section{Problems with current offer}
@@ -243,30 +236,27 @@ Socket.IO also further implements the abstractions outlined by goal 1) of a comm
 Although this protocol stack satisfies the most important goals listed, it still has some problems to be solved, namely the following:
 
 \begin{enumerate}
-    \item The Events system provided by Socket.IO is useful for many applications, sometimes responses to events are required, which is often times named a \textbf{Remote Procedure Call}. This needs to be implemented manually for every event:
+    \item While the event system provided by Socket.IO is useful for many applications, sometimes responses to events are required. This is often times named a \textbf{Remote Procedure Call} and needs to be implemented manually for every event:
     \begin{itemize}
         \item define and keep track of a separate request and response event
         \item add an identifying element to request and response data to identify which response belongs to which request and prevent mixing up responses if multiple requests are sent out in short succession
         \item keep a list of open requests to handle responses once received.
     \end{itemize}
-    Since the implementation is the same every time and is potentially needed many times in an application, it should be abstracted by the framework.
-    \item While Socket.IO provides a very clean and feature-complete API for some programming languages (like Python and JavaScript), it doesn't to so for others, like C++ which is only supported for clients. While there are libraries to create C++ WebSocket servers and clients (like websocket++ which is used in this paper), they require a lot of code (to some part due to the nature of the language) and tedious state management when used directly. Additionally, the event system would need to be implemented manually for every event every time which is tedious. \cite{b4}
+    \item While Socket.IO provides a very clean and feature-complete API for some programming languages (like Python and JavaScript), it doesn't do so for others like C++ which is only supported for clients. While there are libraries to create C++ WebSocket servers and clients (like websocket++ which is used in this paper), they require a lot of code (to some part due to the nature of the language) and tedious state management when used directly. Additionally, the event system would need to be implemented manually for every event every time, which is tedious. \cite{b4}
     \item The data serialization and deserialization of Socket.IO is fully dynamic, meaning that before an event is actually processed, the code cannot possibly know the structure of the event data. This presents multiple problems:
     \begin{itemize}
-        \item Deserialization of event data to language-native data structures is impossible for statically typed languages like C++, which \textcolor{red}{nullifies (bad wording?)} the benefits of static typing. It requires the use of dynamic containers like maps to represent objects with strings as attribute names. Since the containers need to be fully dynamic, the programmer first needs to write code to check if an expected attribute exists, assert its's type and finally convert it to the representative language-native type.
-        \item Even in dynamic languages like JavaScript where objects can have dynamic attributes and variables are dynamically typed, it is still necessary or at least helpful to perform the same validation to provide adequate error handling and avoid unexpected behaviors. There are also additional systems (TypeScript for JS and type hints for Python) that provide the benefits of static typing even though the underlying language is dynamic. An example is rich IntelliSense editor support to avoid typos in attribute names.
+        \item Deserialization of event data to language-native data structures is impossible for statically typed languages like C++, which negates the benefits of static typing. It requires the use of dynamic containers like maps to represent objects with strings as attribute names. Since the containers need to be fully dynamic, the programmer first needs to write code to check if an expected attribute exists, assert its's type and finally convert it to the representative language-native type, which is tedious.
+        \item Even in dynamic languages like JavaScript where objects can have dynamic attributes and variables are dynamically typed it is still helpful to perform the same validation in order to provide adequate error handling and avoid unexpected behaviors. There are also additional systems (TypeScript for JS and type hints for Python) that provide the benefits of static typing (such as rich IntelliSense) even though the underlying language is dynamic.
     \end{itemize}
-    Since validation should always be performed (expect when explicitly specifying a type to be unknown), it should be abstracted by the communication framework. Instead of the programmer having to write the validation code, the programmer will define the structure of the expected value in a language native format as far as possible (structures in C++, Zod schemas in JS/TS). The framework is then responsible for performing the validation, so data reaching the user's code is guaranteed to have the expected structure. \cite{b2}
 \end{enumerate}
 
 
 \section{Solution and Design Overview}
 
-To solve the before mentioned problems, and implement the last missing goals of data validation and more, the top-level protocol in the stack (Socket.IO) will be replaced by a new protocol with language support libraries which has been named \textbf{msglink}.
+To solve the aforementioned problems, and implement the last missing goals of data validation and more, the top-level protocol in the stack (Socket.IO) will be replaced by a new protocol with language support libraries which has been named \textbf{msglink}.
 
-msglink will build on top of WebSockets, implementing all features of Socket.IO that are relevant to achieve the listed goals. In addition it will add direct framework support for more commonly used communication schemes.
+msglink will build on top of WebSockets, implementing all features of Socket.IO that are relevant to achieve the listed goals. In addition it will add direct framework support for more commonly used communication schemes/primitives.
 
-\textcolor{red}{remove this paragraph?}
 It should be noted here, that msglink is a point-to-point communication protocol, like WebSocket and Socket.IO. Socket.IO provides the ability to send events from a server to multiple connected clients, which is possible to implement using msglink but is not a primary goal and will not be covered here.
 
 These are the core principles of the msglink framework:
@@ -290,28 +280,38 @@ This section will cover how the the core principles of the msglink framework wor
 
 \subsection{Simple API}
 
-Similar to the protocols and accompanying libraries listed above (especially Socket.IO), msglink tries to achieve it's core functionality with the least code possible using a declarative API. Rather than writing code explicitly stating how to perform the serialization, validation or communication step-by-step (imperative programming), the developer writes code specifying (declaring) what result is expected (declarative programming).
+Similar to the protocols and accompanying libraries listed above (especially Socket.IO), msglink tries to achieve it's core functionality with the least code possible using a declarative API. Rather than writing code explicitly stating how to perform the serialization, validation or communication step-by-step (imperative programming), the developer writes code specifying (declaring) what result is expected (declarative programming). \cite{imperative-vs-declarative}
 
-Like Socket.IO, to connect an msglink client to a server, one only has to specify what server the client should \textbf{be connected to} and the library will automatically handle connection and reconnection in case of connection loss. 
+Like Socket.IO, to connect a msglink client to a server, one only has to specify what server the client should \textbf{be connected to} and the library will automatically handle connection and reconnection in case of connection loss. 
 
+\begin{code-cpp}
+// example msglink client in C++
+auto client = new msglink::client<my_link>(
+    "ws://10.5.5.5/"
+);
+\end{code-cpp}
 
 \subsection{Automatic state management}
 
-Like Socket.IO, msglink uses a heartbeat (ping-pong) system to determine when the connection drops. This happens internally and requires no code from the user. It works by sending a small message back and fourth every few seconds. In msglink, the server is responsible for sending this so called "ping" message to the client. If the client doesn't respond with the corresponding "pong" message withing a certain time, the connection is dropped. Similarly, if the client doesn't receive a ping in a certain amount of time, it drops the connection on it's side and attempts to reconnect automatically.
+Like Socket.IO, msglink uses an additional heartbeat (ping-pong) system on top of the one provided by WebSockets to determine when the connection drops. This happens internally and requires no code from the user. It works by sending a small message back and fourth every few seconds. In msglink, the server is responsible for sending this so called "ping" message to the client. If the client doesn't respond with the corresponding "pong" message withing a certain time, the connection is dropped. Similarly, if the client doesn't receive a ping in a certain amount of time, it drops the connection on it's side and attempts to reconnect automatically.
 
 
 \subsection{Platform independence}
 
-msglink should be able to be used with different programming languages and on any operating system. All implementations should be able to communicate with each other.
+msglink should be usable with different programming languages and on any operating system. All implementations should be able to communicate with each other.
 
 
 \subsection{Data validation and strict type-safety}
 
-A key feature of msglink is the above discussed integrated data validation, along with other type-safety features (as far as the specific programming language allows).
+A key feature of msglink is integrated data validation, along with other type-safety features (as far as the specific programming language allows).
 
-Even though msglink is the top-level protocol in the newly defined protocol stack, the end-user application's communication itself also happens according to some protocol, defined by the application developer. The job of the communication framework (msglink) is, to make the implementation and definition of this protocol as simple as possible. In msglink, this user-level protocol is called the \textbf{link}.
+Even though msglink is the top-level protocol in the newly defined protocol stack, the end-user application's communication itself also happens according to some protocol, defined by the application developer. The job of the communication framework (msglink) is to make the implementation and definition of this protocol as simple as possible. In msglink, this user-level protocol is called the \textbf{link}.
 
-Unlike Socket.IO, msglink requires this link to be fully defined in a static manner, meaning the programmer has to explicitly state the existence and associated data structure of every communication primitive (e.g. an event, but msglink has others as well) before it can be used for communication. In case of an event, that would mean explicitly stating that an event with a given name exists, wether it can be emitted or just be received and providing the schema for the data structure transmitted with the event. All of these definitions have to happen statically, so that (for applicable languages) the entire structure of the link (user protocol) is known at compile time. This gives the library the ability to automatically perform validation of the communication and serialization/deserialization of the data from/into language-native formats, even for statically typed languages like C++, without the developer having to manually perform any of those steps.
+Unlike Socket.IO, msglink requires this link to be fully defined in a static manner, meaning the programmer has to explicitly state the existence and associated data structure of every communication primitive (e.g. an event, but msglink has others as well) before it can be used for communication. 
+
+In case of an event, that would mean explicitly stating that an event with a given name exists, whether it can be emitted or received and providing the schema for the data structure transmitted with the event (using language native format as far as possible such as structures in C++ or Zod schemas in JS/TS). 
+
+All of these definitions have to happen statically, so that (for applicable languages) the entire structure of the link (user protocol) is known at compile time. This gives the library the ability to automatically perform validation of the communication and serialization/deserialization of the data from/into language-native formats (even for statically typed languages like C++) without the developer having to manually perform any of those steps.
 
 In msglink, both communication parties have to define the link from their perspective of the communication. This means for example, that an incoming event on one side has to have a matching outgoing event on the other side. When connecting, msglink performs a link-compatibility check, to make sure both parties have defined a compatible protocol. If the two links are not compatible, the connection is aborted before trying to sending any user data.
 
@@ -320,7 +320,7 @@ One of the goals for msglink is to keep the definition of this link entirely nat
 
 \subsection{Communication party equality}
 
-In msglink, both communication parties (client and server) are treated equally. Apart from a few internal details, after a msglink connection is established, both parties can perform the exact same actions, in the bounds of what is defined by the link.
+In msglink, both communication parties (client and server) are treated equally. Apart from a few internal details, after a msglink connection is established, both parties can perform the exact same actions, in the bounds of what is defined by their link.
 
 
 \subsection{Common communication primitives}
@@ -329,8 +329,12 @@ msglink defines three commonly used communication primitives that a programmer c
 
 \begin{itemize}
     \item \textbf{Events} work in the same way as they do with Socket.IO, with the exception of having to define them and their data structure statically.
-    \item \textbf{Remote Function Calls} can be viewed as two events with opposite directions. One "call" event and one "result" event. RFCs work as the name implies. One the called (receiving) side of the communication defines a function taking some input data (statically defined by schema) and returning some result data (also defined by a schema). Since a traditional function cannot yield multiple results, there can only be one handler function. The other side of the communication can remotely call the function over the network, efficiently using asynchronous abilities of a language if available so the remote function call can be used almost as seamlessly as a local one. The framework automatically handles the matching of results to pending calls so data is not mixed up. Other framework typically call these Remote Procedure Calls (RPCs), though "function" was chosen for msglink as it clarifies the fact that the call always yields some result data.
-    \item \textbf{Data Sources} can be imagined as functions which can be called with some initial input data, that can follow up with more results over time until canceled. This might seem confusing at first, but it is useful for implementing dynamic subscription models. This is best explained using an example: \textit{A web dashboard manages 100 servo actuators and needs to display live updates of their positions. Always transmitting the position of each results is too much traffic. Since only 5 can be displayed on screen at a time, a protocol needs to be implemented to activate or deactivate the updates for each when shown or hidden.} This could be implemented manually using a "sub", "unsub" and "update" event, providing the actuator ID in the "update" event. msglink abstracts and standardizes this however. In the UI component requiring the data of a specific actuator, a data source listener could be registered with the actuator ID as an input argument. This can be imagined as the function being called with the actuator ID as a parameter, and the function then following up with a new result event every time the actuator position updates. Although the function can be used as an illustration, it is important to understand that the initial "function call" when adding a subscriber with specific input parameters is not intended to execute code on the other parties system which is call-time dependant. It is merely a way to "enable" this data source.
+    \item \textbf{Remote Function Calls (RFC)} can be viewed as two events with opposite directions. One "call" event and one "result" event. RFCs work as the name implies. The called (receiving) side of the communication defines a function taking some input data (statically defined by schema) and returning some result data (also defined by a schema). Since a traditional function cannot yield multiple results, there can only be one such handler function. The other side of the communication can remotely call the function over the network, using asynchronous abilities of a language if available. This way, the remote function call can be used almost as seamlessly as a local one. The framework automatically handles the matching of results to pending calls so data is not mixed up. 
+
+    Other frameworks typically call this scheme "Remote Procedure Call" (RPCs), though "function" was chosen for msglink as it clarifies the fact that the call always yields some result data.
+    \item \textbf{Data Sources} can be imagined as functions which can be called with some initial input data, that can follow up with more results over time until canceled. This might seem confusing at first, but it is useful for implementing \textbf{dynamic subscription models}. This is best explained using an example: \textit{A web dashboard manages 100 servo actuators and needs to display live updates of their positions. Always transmitting the position of each results is too much traffic. Since only 5 can be displayed on screen at a time, a protocol needs to be implemented to activate or deactivate the updates for each when shown or hidden.} This could be implemented manually using a "sub", "unsub" and "update" event, providing the actuator ID in the "update" event.
+    
+    msglink abstracts and standardizes this further. In the UI component requiring the data of a specific actuator, a data source listener could be registered with the actuator ID as an input argument. This can be imagined as the function being called with the actuator ID as a parameter, and the function then following up with a new result event every time this specific actuator's position updates. There can also be multiple of those "functions" (possibly with different input values) active at the same time. Although the function analogy can be used as an illustration, it is important to understand that the initial "function call" when adding a subscriber with specific input parameters is merely a way to "enable" this data source and not an actual remote function call.
 \end{itemize}
 
 
@@ -338,41 +342,42 @@ msglink defines three commonly used communication primitives that a programmer c
 
 At the time of writing, the msglink protocol uses JSON to encode it's internal messages as well as user data. This is not very bandwidth efficient, especially when long attribute names are used, which is helpful for development purposes but may be improved in the future. 
 
-Never the less, msglink tries to perform the communication as efficiently as possible by only transmitting data over the network that is actually required. For example, the msglink framework internally tracks whether an event currently has any listeners and informs the other communication party if there are any. If there are no listeners, the event doesn't need to be transmitted over the network, even if one is emitted. A similar concept applies to data sources.
+Nevertheless, msglink tries to perform the communication as efficiently as possible by only transmitting data over the network that is actually required. For example, the msglink framework internally tracks whether an event currently has any listeners and informs the other communication party if there are any. If there are no listeners, the event doesn't need to be transmitted over the network, even if one is emitted. A similar concept applies to data sources.
 
-Data sources can be optimized further. If there are multiple data source "subscribers" with the same request parameters, the request doesn't need to be sent to the server multiple times, and there is no need to send value updates multiple times. The framework can detect when there is already an active data source with the same input parameters and simply use it's update messages until there are no subscribers anymore, at which point the source can be disabled.
+Data sources can be optimized further. If there are multiple data source "subscribers" with the same request parameters, the request doesn't need to be sent to the server multiple times, and there is no need to send value updates multiple times. The framework can detect when there is already an active data source with the same input parameters and simply use it's update messages until there are no subscribers anymore, at which point the source is disabled.
 
 \section{Results and Applications}
 
-msglink is the result of solving very specific problems for a very specific use case. Nevertheless, since it uses widely supported web technologies as it's backbone, it can be easily integrated wherever and expanded with whatever uses these technologies. Examples would be a HTTP reverse proxy to add SSL encryption.  
+msglink is the result of solving very specific problems for a very specific use case. Nevertheless, since it uses widely supported web technologies as it's backbone, it can be easily integrated and expanded with whatever uses these technologies. Examples would be an HTTP reverse proxy to add SSL encryption.  
 
 Thanks to the rather general API and structure, msglink is useful for potentially many scenarios ranging from server-client communication in UI applications (web and local) to games to data exchange between servers to data exchange between robots in Botball.
 
 
 \section{Limitations}
 
-Since msglink uses WebSockets as an underlying transport layer, a rather inefficient JSON encoding for serialization and is an internally rather complex protocol to manage, speed is not one of it's strengths. As mentioned in the protocol stackup, a more lower-level protocol like TCP or UDP directly is required for high-performance applications, trading speed for convenience.
+Since msglink uses WebSockets as an underlying transport layer, a rather inefficient JSON encoding for serialization and is an internally rather complex protocol to manage, speed is not one of it's strengths. As mentioned in the protocol stackup, directly using a more lower-level protocol like TCP or UDP is required for high-performance applications, trading convenience for speed.
 
-A further limitation is the point-to-point nature of the framework. There always needs to be a msglink client connected to a msglink server, although a server can simultaneously have connections to multiple clients and can therefore distribute messages between them. At this time, it is not planned to directly implement support for broadcast or multicast communication into msglink, even on the server side, since this was not part of the original goal. For applications where many hosts need to communicate with each other directly in a mesh-like topology, there are other protocols better suited for the purpose that don't have the limitation of the browser. An example is the DDS which is used by ROS2 (Robot Operating System 2) and is therefore common in robotics.
+A further limitation is the point-to-point nature of the framework. There always needs to be a msglink client connected to a msglink server, although a server can simultaneously have connections to multiple clients and can therefore distribute messages between them. At this time, it is not planned to directly implement support for broadcast or multicast communication into msglink, even on the server side (which Socket.IO does support), since this was not part of the original goal. For applications where many hosts need to communicate with each other directly in a mesh-like topology, there are other protocols better suited for the purpose that don't have the limitation of the browser. An example is DDS which is used by ROS2 (Robot Operating System 2) and is therefore common in robotics.
 
 
 \section{Conclusion}
 
 msglink satisfies all the goals defined in this paper for it's specific use case and allows building new, innovative applications quicker without worrying about communication.
 
-msglink is an open source project which can currently be viewed and contributed to as part of the \textbf{melektron/el-std} library on GitHub. At the time of writing, msglink is still in the development phase and has not been fully implemented in multiple languages yet. The C++ library is the most developed at this time, with TypeScript and Python following very soon.
+msglink is an open source project which can currently be viewed and contributed to as part of the \textbf{melektron/el-std} library on GitHub (branch "msglink\_dev"). At the time of writing, msglink is still in the development phase and has not been fully implemented in multiple languages yet. The C++ library is the most developed at this time, with TypeScript and Python following very soon. \cite{el-std-gh}
 
-
-
-
-\listoffigures
 
 \begin{thebibliography}{00}
 
-    \bibitem{b1} Information for Socket.io, URL:https://socket.io/
-    \bibitem{b2} Information for Zod, URL:https://zod.dev/
-    \bibitem{b3} Websocket standart, URL:  https://www.rfc-editor.org/rfc/rfc6455.html
-    \bibitem{b4} Information for WebSocket++, URL: https://github.com/zaphoyd/websocketpp/
+    \bibitem{http-mdn} Information for HTTP, URL: \url{https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview}
+    \bibitem{b1} Information for Socket.io, URL: \url{https://socket.io/}
+    \bibitem{b2} Information for Zod, URL: \url{https://zod.dev/}
+    \bibitem{b3} Websocket standart, URL: \url{https://www.rfc-editor.org/rfc/rfc6455.html}
+    \bibitem{ws-client-mdn} Writing a websocket client, URL: \url{https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications}
+    \bibitem{b4} Information for WebSocket++, URL: \url{https://github.com/zaphoyd/websocketpp/}
+    \bibitem{imperative-vs-declarative} Imperative vs. declarative, URL: \url{https://programiz.pro/resources/imperative-vs-declarative-programming/}
+    \bibitem{el-std-gh} el-std library for C++, URL: \url{https://github.com/melektron/el-std}
+    
     
 \end{thebibliography}
 
