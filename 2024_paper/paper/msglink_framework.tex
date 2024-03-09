@@ -126,7 +126,7 @@
 \maketitle
 
 \begin{abstract}
-    This document will focus on an important topic in software development: Network communication. It will provide an insight into why what network communication is needed for and how it is typically realized. Additionally it will cover problems and annoyances with currently available communication frameworks for user-level applications as well as introduce concepts and a possible solution for the before-mentioned. 
+    This document will focus on an important topic in software development: Network communication. It will provide an insight into why what network communication is needed for and how it is typically realized. Additionally it will cover problems and annoyances with currently available communication frameworks for a specific user-level applications as well as introduce concepts and a possible solution for the before-mentioned. 
 \end{abstract}
 
 \section{Introduction}
@@ -158,7 +158,7 @@ UDP is less reliable than TCP. Before choosing a respective protocol one has to 
 
 
 From here on, this paper will focus on point-to-point communication between two hosts, although many of the concepts described later are also applicable to \textcolor{red}{multicast communication}.
-For this reason, it will focus higher-level protocols and frameworks based on TCP from here-on out.
+For this reason, it will focus on higher-level protocols and frameworks based on TCP from here-on out.
 
 \subsection{Communication frameworks}
 
@@ -166,15 +166,15 @@ While TCP communication is the basis of many point-to-point networking applicati
 
 Providing solutions for these \textcolor{red}{annoyances/problems} is the job of communication frameworks. A communication framework does not only implement a higher level protocol to support the additional functionality, but also provides libraries of programming language functions to integrate the functionality as seamlessly as possible with language features.
 
-In summary, they may provide the following services to the user:
+The work described in this paper aims to create a communication framework to solve problems for a rather specific set of requirements.:
 
 \begin{enumerate}
-    \item Abstraction of low-level socket APIs, exposing the most important functionality and automatically handle the rest in the background (according to common use-cases) including but not limited to:
+    \item Abstraction of low-level socket APIs, exposing the most important functionality with little code and automatically handle the rest in the background (according to common use-cases) including but not limited to:
     \begin{itemize}
         \item Automatic management of connection state, handling disconnects and reconnects
     \end{itemize}
     \item Provide a way to exchange messages, which are blocks of data of a known (but still possibly dynamic) length, guaranteeing arrival in same grouping and order as sent
-    \item Provide facilities to serialize and deserialize language-native data structures to easily send them over the network (with the least code possible)
+    \item Provide facilities to serialize and deserialize language-native data structures to easily send them over the network with the least code possible
     \item Provide data validation for sent and received messages according to programmer defined schemas (in language native format as far as possible), so the user code can trust received data to be in valid format.
     \item Provide additional, commonly used communication schemes such as metadata exchange or Remote Procedure Calls (RPCs) that further simplify common use cases of network communication for the developer
 \end{enumerate}
@@ -184,9 +184,11 @@ In summary, they may provide the following services to the user:
 
 There are many different network protocols and accompanying frameworks building on top of the above described, which solve different problems depending on the application requirements. Not all of them will be described in this paper.
 
-The following section explains a typical protocol stack used for web apps, since this is one of the original primary use cases for the work introduced in this paper. Since web browsers offer only limited to no access to system socket APIs, which already defines a large part of the protocol stack used.
 
-That being said, the following is the protocol stack used as a starting point for the improvements described later:
+\textcolor{red}{(possible section "Motivation")}
+The following section explains a typical protocol stack used for web apps, since one of the original primary use-cases of the work described in this paper is the communication between a single-page web-app and a high performance, low level server written in C++. This used to implement (among other uses) to implement the touchscreen UI to control FrenchBakery robots for the Botball competition. Since web browsers offer only limited to no access to system socket APIs, a large part of the protocol stack used is already defined.
+
+That being said, the following is the protocol stack used as a starting point for the improvements described later.
 
 \subsection{Transmission Control Protocol (TCP)}
 
@@ -250,13 +252,24 @@ Socket.IO also further implements the abstractions outlined by goal 1) of a comm
 
 \section{Problems with current offer}
 
-This section builds upon the last mentioned protocol SocketIO.
+Although this protocol stack satisfies the most important goals listed, it still has some problems to be solved, namely the following:
 
-No reassurance of data validity. before using incoming data, one ideally has to check that the structure and type of the received data matches what is expected and handle the error if that isn't the case. This is tedious to do manually for every single event. Additionally since SocketIO allows sending arbitrary data, it is easy to accidentally send data in an incorrect structure, such as accidentally making a typo in an attribute name.
-
-
-
-
+\begin{enumerate}
+    \item The Events system provided by Socket.IO is useful for many applications, sometimes responses to events are required, which is often times named a \textbf{Remote Procedure Call}. This needs to be implemented manually for every event:
+    \begin{itemize}
+        \item define and keep track of a separate request and response event
+        \item add an identifying element to request and response data to identify which response belongs to which request and prevent mixing up responses if multiple requests are sent out in short succession
+        \item keep a list of open requests to handle responses once received.
+    \end{itemize}
+    Since the implementation is the same every time and is potentially needed many times in an application, it should be abstracted by the framework.
+    \item While Socket.IO provides a very clean and feature-complete API for some programming languages (like Python and JavaScript), it doesn't to so for others, like C++ which is only supported for clients. While there are libraries to create C++ WebSocket servers and clients (like websocket++ which is used in this paper), they require a lot of code (to some part due to the nature of the language) and tedious state management when used directly. Additionally, the event system would need to be implemented manually for every event every time which is tedious.
+    \item The data serialization and deserialization of Socket.IO is fully dynamic, meaning that before an event is actually processed, the code cannot possibly know the structure of the event data. This presents multiple problems:
+    \begin{itemize}
+        \item Deserialization of event data to language-native data structures is impossible for statically typed languages like C++, which \textcolor{red}{nullifies (bad wording?)} the benefits of static typing. It requires the use of dynamic containers like maps to represent objects with strings as attribute names. Since the containers need to be fully dynamic, the programmer first needs to write code to check if an expected attribute exists, assert its's type and finally convert it to the representative language-native type.
+        \item Even in dynamic languages like JavaScript where objects can have dynamic attributes and variables are dynamically typed, it is still necessary or at least helpful to perform the same validation to provide adequate error handling and avoid unexpected behaviors. There are also additional systems (TypeScript for JS and type hints for Python) that provide the benefits of static typing even though the underlying language is dynamic. An example is rich IntelliSense editor support to avoid typos in attribute names.
+    \end{itemize}
+    Since validation should always be performed (expect when explicitly specifying a type to be unknown), it should be abstracted by the communication framework. Instead of the programmer having to write the validation code, the programmer will define the structure of the expected value in a language native format as far as possible (structures in C++, Zod schemas in JS/TS). The framework is then responsible for performing the validation, so data reaching the user's code is guaranteed to have the expected structure.
+\end{enumerate}
 
 
 \section{Solution and Design Overview}
