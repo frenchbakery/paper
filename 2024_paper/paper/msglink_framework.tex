@@ -215,7 +215,7 @@ By automatically handling TCP connection establishment and implementing a way to
 
 The WebSocket protocol however doesn't expose the raw stream socket to the programmer, instead it introduced the concept of messages, hereby implementing point 2) of the goals for a communication framework. A message is a self contained chunk of data (typically a string, raw binary is also possible) the transmission of which over the socket is transparent to the user. When the programmer sends messages, they guaranteed to arrive at the other communication party in one piece and in order in a message handler.
 
-Like with HTTP, many languages provide simple APIs to create and use WebSocket connections.
+Like with HTTP, many languages provide simple APIs to create and use WebSocket connections. \cite{b3}
 
 \begin{code-js}
 // JavaScript
@@ -247,7 +247,7 @@ socket.on("event2", (arg1, arg2, ...) => {
 })
 \end{code-js}
 
-Socket.IO also further implements the abstractions outlined by goal 1) of a communication framework, by implementing automatic connection state management and reconnects. Where with WebSockets, the programmer explicitly needs to write code to \textbf{connect to a server},  \textbf{detect disconnects}, and repeat the procedure, with Socket.IO, the programmer is merely required to tell the computer to \textbf{"be connected to a specified server"}. The library will then connect, detect failures and reconnect automatically to satisfy this request.
+Socket.IO also further implements the abstractions outlined by goal 1) of a communication framework, by implementing automatic connection state management and reconnects. Where with WebSockets, the programmer explicitly needs to write code to \textbf{connect to a server},  \textbf{detect disconnects}, and repeat the procedure, with Socket.IO, the programmer is merely required to tell the computer to \textbf{"be connected to a specified server"}. The library will then connect, detect failures and reconnect automatically to satisfy this request. \cite{b1}
 
 
 \section{Problems with current offer}
@@ -366,7 +366,10 @@ Never the less, msglink tries to perform the communication as efficiently as pos
 
 \begin{thebibliography}{00}
 
-    \bibitem{b1} Proof for NordPass study, URL:https://tech.co/password-managers/how-many-passwords-average-person
+    \bibitem{b1} Information for Socket.io, URL:https://socket.io/
+    \bibitem{b2} Information for Zod, URL:https://zod.dev/
+    \bibitem{b3} Information for WebSocket++, URL: https://docs.websocketpp.org/ 
+    https://github.com/zaphoyd/websocketpp/
 
 \end{thebibliography}
 
