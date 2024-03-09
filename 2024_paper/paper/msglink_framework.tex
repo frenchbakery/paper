@@ -126,7 +126,7 @@
 \maketitle
 
 \begin{abstract}
-    This document will focus on an important topic in software development: Network communication. It will provide an insight into why what network communication is needed for and how it is typically realized. Additionally it will cover problems and annoyances with currently available communication frameworks for a specific user-level applications as well as introduce concepts and a possible solution for the before-mentioned. 
+    This document will focus on an important topic in software development: Network communication. It will provide an insight into what network communication is needed for and how it is typically realized. Additionally it will cover problems and annoyances with currently available communication frameworks for specific user-level applications as well as introduce concepts and a possible solution for the before-mentioned problems.
 \end{abstract}
 
 \section{Introduction}
@@ -137,11 +137,9 @@ When it comes to computer science and robotics, sooner or later, multiple comput
 
 Without going into detail of how the Internet Protocol or any of it's underlying technologies work (out of the scope of this paper), this section provides a quick overview of IP.
 
-In an IP network, every participating communication party (so called "host",such as a computer) is assigned an IP Address (either manually by the Administrator or using automated systems such as DHCP which will not be explained further). The IP address is the lowest level of addressing most user-level applications have to deal with. It is a 32-Bit number typically expressed by four octets (bytes) in dot notation: \textbf{192.168.1.1}
+In an IP network, every participating communication party (so called "host",such as a computer) is assigned an IP Address. The IP address is the lowest level of addressing most user-level applications have to deal with. It is a 32-Bit number typically expressed by four octets (bytes) in dot notation: \textbf{192.168.1.1}
 
-The IP address is split into two parts: the network address bits (some number of bits on the left of the address) and the host address bits (the rest of the bits on the right side). How many of the bits are part of the network and host area is variable and defined by a so-called netmask, which will not be discussed in more detail. All host with the same network-address-bits are considered to be on the same network and can therefore communicate with each other. Each host is uniquely identified in the network by the host-address-bits.
-
-The Internet Protocol provides the foundations for transmitting data between hosts on this network (or possibly multiple networks): IP network packets. These contain Among other details, the sender and receiver addressing information and a block of data to be transmitted between the host. The operating system's network stack and other networking hardware then switch and route the packet from the sender to the desired destination host.
+The Internet Protocol provides the foundations for transmitting data between hosts on a network (or possibly multiple networks) in terms of IP network packets. These contain among other details, the sender and receiver addressing information and a block of data to be transmitted between the hosts. The operating system's network stack and other networking hardware then switch and route the packet from the sender to the desired destination host.
 
 When  developing applications however, the programmer almost never has to worry about the working of these underlying systems. Instead, they use higher level protocols build on top of IP, which abstract abstract IP packets and allow programmers to more conveniently achieve the desired functionality.
 
@@ -149,29 +147,23 @@ When  developing applications however, the programmer almost never has to worry 
 
 There are two main protocols on top of IP for user applications - TCP and UDP. 
 
-TCP stands for \textbf{Transmission Control Protocol} and is a connection based protocol, meaning there will be a standing connection between two hosts. Before any data can be sent over TCP, a connection has to be established during an initial handshake between both communication parties. This is done automatically in the background. Once established, a TCP connection provides a pipe-like environment for transmitting a continuous stream of data bytes. The stream is of undefined length and data sent by one host is guaranteed to be received in the same order as sent by the other (without missing bytes in between). However, since TCP "streams" bytes, it does guarantee that any block of bytes send is received in one piece.
+TCP stands for \textbf{Transmission Control Protocol} and is a connection based protocol, meaning there will be a standing connection between two hosts. Before any data can be sent over TCP, a connection has to be established during an initial handshake between both communication parties. This is done automatically in the background. Once established, a TCP connection provides a pipe-like environment for transmitting a continuous stream of data bytes. The data sent is guaranteed to be received in the same order (without missing bytes in between). However, since TCP "streams" bytes, it does guarantee that any block of bytes sent at once is received in one piece.
 
-UDP stands for \textbf{User Datagram Protocol}. Unlike TCP, UDP does not require a connection to be established. The UDP merely sends a block of data (called the user datagram) all at once to a destination host in a single IP packet. There is nothing set in place to ensure that the packet reaches the destination. Without further protocols, UDP packets do not have any relation to each other, therefore there is no insurance of the order packets are received. Since the entire datagram is sent in one IP packet, it's maximum is restricted to the limits imposed by the latter.\textcolor{red}{(65.535 bytes)} \textcolor{red}{(Achtung!!!!!!!!!!!!!!!!!!!!!! wenn man mehrere geräte hat verwendet man oft eigentlich UDP da das schneller geht)}
+UDP stands for \textbf{User Datagram Protocol}. Unlike TCP, UDP does not require a connection to be established. UDP merely sends a block of data (user datagrams) all at once to a destination host within a single IP packet. There is no guarantee that the packet reaches the destination. 
 
-UDP is less reliable than TCP. Before choosing a respective protocol one has to decide if they need speed or reliability more. A common uses for UDP are videos whereas a common use for TCP are websites.
-
-From here on, this paper will focus on point-to-point communication between two hosts, although many of the concepts described later are also applicable to \textcolor{red}{multicast communication}.
-For this reason, it will focus on higher-level protocols and frameworks based on TCP from here-on out.
+From here on, this paper will focus on reliable point-to-point communication between two hosts (although many of the concepts described later are also applicable to multicast communication) and on higher-level protocols and frameworks based on TCP.
 
 
 \subsection{Communication frameworks}
 
 While TCP communication is the basis of many point-to-point networking applications requiring data integrity, it is still rather tedious for a programmer to implement in high-level applications. The programmer still has to know how to use the OS APIs to create and manage TCP sockets and since only bytes can be sent over the socket, the programmer needs to manually serialize and deserialize internal program structures and variables to transmit them. Besides this, raw TCP is only really suited for continuous data streams, while many applications require event-based bidirectional communication where messages (blocks of data with clear boundaries) are sent back and fourth.
 
-Providing solutions for these \textcolor{red}{annoyances/problems} is the job of communication frameworks. A communication framework does not only implement a higher level protocol to support the additional functionality, but also provides libraries of programming language functions to integrate the functionality as seamlessly as possible with language features.
+Providing solutions for these annoyances is the job of communication frameworks. A communication framework does not only implement a higher level protocol to support the additional functionality, but also provides libraries of programming language functions to integrate the functionality as seamlessly as possible with language features.
 
-The work described in this paper aims to create a communication framework to solve problems for a rather specific set of requirements.:
+The work described in this paper aims to create a communication framework to solve problems for a rather specific set of requirements:
 
 \begin{enumerate}
-    \item Abstraction of low-level socket APIs, exposing the most important functionality with little code and automatically handle the rest in the background (according to common use-cases) including but not limited to:
-    \begin{itemize}
-        \item Automatic management of connection state, handling disconnects and reconnects
-    \end{itemize}
+    \item Abstraction of low-level socket APIs, exposing the most important functionality with little code and automatically handle the rest in the background (according to common use-cases) including but not limited to automatic management of connection state, handling disconnects and reconnects
     \item Provide a way to exchange messages, which are blocks of data of a known (but still possibly dynamic) length, guaranteeing arrival in same grouping and order as sent
     \item Provide facilities to serialize and deserialize language-native data structures to easily send them over the network with the least code possible
     \item Provide data validation for sent and received messages according to programmer defined schemas (in language native format as far as possible), so the user code can trust received data to be in valid format.
@@ -181,13 +173,10 @@ The work described in this paper aims to create a communication framework to sol
 
 \section{State of the Art}
 
-There are many different network protocols and accompanying frameworks building on top of the above described, which solve different problems depending on the application requirements. Not all of them will be described in this paper.
+There are many different network protocols and accompanying frameworks building on top of TCP, which solve different problems depending on the application requirements. Not all of them will be described in this paper.
 
+The following section explains a typical protocol stack used for web apps, since one of the original primary use-cases of the work described in this paper is the communication between a single-page web-app and a high performance, low level server written in C++. This is used to implement (among other uses) the touchscreen UI to control FrenchBakery robots for the Botball competition. Since web browsers offer limited to no access to system socket APIs, a large part of the protocol stack is already defined.
 
-\textcolor{red}{(possible section "Motivation")}
-The following section explains a typical protocol stack used for web apps, since one of the original primary use-cases of the work described in this paper is the communication between a single-page web-app and a high performance, low level server written in C++. This used to implement (among other uses) to implement the touchscreen UI to control FrenchBakery robots for the Botball competition. Since web browsers offer only limited to no access to system socket APIs, a large part of the protocol stack used is already defined.
-
-That being said, the following is the protocol stack used as a starting point for the improvements described later.
 
 \subsection{Transmission Control Protocol (TCP)}
 
