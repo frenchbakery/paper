@@ -348,7 +348,35 @@ Data sources can be optimized further. If there are multiple data source "subscr
 
 \section{Results and Applications}
 
-msglink is the result of solving very specific problems for a very specific use case. Nevertheless, since it uses widely supported web technologies as it's backbone, it can be easily integrated and expanded with whatever uses these technologies. Examples would be an HTTP reverse proxy to add SSL encryption.  
+msglink is the result of solving very specific problems for a very specific use case. Nevertheless, since it uses widely supported web technologies as it's backbone, it can be easily integrated and expanded with whatever uses these technologies. Examples would be an HTTP reverse proxy to add SSL encryption.
+
+The following is a compressed code example of how one might define a msglink link in C++. The explanation of the code example is beyond the scope of this paper.
+
+\begin{code-cpp}
+// structure name is event name
+struct my_event 
+    : public msglink::incoming_event {
+    int a;
+    std::string b;
+    EL_MSGLINK_DEFINE_INCOMING_EVENT(
+        my_event, a, b
+    )
+};
+class my_link : public msglink::link {
+    using link::link;
+    EL_MSGLINK_LINK_VERSION(1);
+    msglink::event_sub_hdl_ptr my_sub;
+    void handle_my_event(in_event &_evt) {
+        std::cout << _evt.a << _evt.b;
+    }
+public:
+    virtual void define() noexcept override {
+        my_sub = define_event<my_event>(
+            &my_link::handle_my_event
+        );
+    }
+};
+\end{code-cpp}
 
 Thanks to the rather general API and structure, msglink is useful for potentially many scenarios ranging from server-client communication in UI applications (web and local) to games to data exchange between servers to data exchange between robots in Botball.
 
