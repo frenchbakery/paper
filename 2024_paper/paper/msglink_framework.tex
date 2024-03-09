@@ -8,8 +8,98 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{caption}
+% next 2 needed for code blocks
+\usepackage{listings}
+%\usepackage{etoolbox}  % needed for number detection, but didn't work reliably
+
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% colors for code blocks
+\definecolor{code-variable}{HTML}{E06C75}
+\definecolor{code-keyword}{HTML}{A626A4}
+\definecolor{code-string}{HTML}{60A14F}
+\definecolor{code-number}{HTML}{986801}
+\definecolor{code-comment}{HTML}{A0A1A7}
+
+% definition to detect numbers
+
+%\newtoggle{InString}{}% Keep track of if we are within a string
+%\togglefalse{InString}% Assume not initally in string
+%
+%\newcommand*{\ColorIfNotInString}[1]{\iftoggle{InString}{#1}{\color{red}#1}}%
+%\newcommand*{\ProcessQuote}[1]{#1\iftoggle{InString}{\global\togglefalse{InString}}{\global\toggletrue{InString}}}%
+
+% Code blocks
+\lstdefinelanguage{JavaScript}{
+    keywords={typeof, new, true, false, catch, function, return, null, catch, switch, const, let, var, if, in, for, while, do, else, case, break},
+    keywordstyle=\color{blue}\bfseries,
+    ndkeywords={class, export, boolean, throw, implements, import, this},
+    ndkeywordstyle=\color{darkgray}\bfseries,
+    identifierstyle=\color{black},
+    sensitive=false,
+    comment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]',
+    morestring=[b]" %,
+    %literate=%
+    %    {"}{{{\ProcessQuote{"}}}}1% Disable coloring within double quotes
+    %    {'}{{{\ProcessQuote{'}}}}1% Disable coloring within single quote
+    %    {`}{{{\ProcessQuote{`}}}}1% Disable coloring backtick quote
+    %    {0}{{{\ColorIfNotInString{0}}}}1
+    %    {1}{{{\ColorIfNotInString{1}}}}1
+    %    {2}{{{\ColorIfNotInString{2}}}}1
+    %    {3}{{{\ColorIfNotInString{3}}}}1
+    %    {4}{{{\ColorIfNotInString{4}}}}1
+    %    {5}{{{\ColorIfNotInString{5}}}}1
+    %    {6}{{{\ColorIfNotInString{6}}}}1
+    %    {7}{{{\ColorIfNotInString{7}}}}1
+    %    {8}{{{\ColorIfNotInString{8}}}}1
+    %    {9}{{{\ColorIfNotInString{9}}}}1
+}
+
+\lstnewenvironment{code-js}{
+    \lstset{
+        language=javascript,
+        frame=none,
+        aboveskip=3mm,
+        belowskip=3mm,
+        showstringspaces=false,
+        columns=flexible,
+        basicstyle={\small\ttfamily},
+        numbers=none,
+        numberstyle=\color{code-number},    % line numbers? we want code numbers
+        keywordstyle=\color{code-keyword},
+        commentstyle=\color{code-comment},
+        stringstyle=\color{code-string},
+        breaklines=true,
+        breakatwhitespace=true,
+        tabsize=3
+    }
+}
+{}
+
+\lstnewenvironment{code-cpp}{
+    \lstset{
+        language=C++,
+        frame=none,
+        aboveskip=3mm,
+        belowskip=3mm,
+        showstringspaces=false,
+        columns=flexible,
+        basicstyle={\small\ttfamily},
+        numbers=none,
+        numberstyle=\color{code-number},    % line numbers? we want code numbers
+        keywordstyle=\color{code-keyword},
+        commentstyle=\color{code-comment},
+        stringstyle=\color{code-string},
+        breaklines=true,
+        breakatwhitespace=true,
+        tabsize=3
+    }
+}
+{}
 
 \begin{document}
 
@@ -40,9 +130,6 @@
 \end{abstract}
 
 \section{Introduction}
-
-For network to function, there needs to be at least two network capable devices.
-
 
 When it comes to computer science and robotics, sooner or later, multiple computers need to communicate with each other. In many cases this communication is achieved over a computer network. Nowadays this is typically implemented using the internet protocol (IP).
 
@@ -77,11 +164,11 @@ For this reason, it will focus higher-level protocols and frameworks based on TC
 
 While TCP communication is the basis of many point-to-point networking applications requiring data integrity, it is still rather tedious for a programmer to implement in high-level applications. The programmer still has to know how to use the OS APIs to create and manage TCP sockets and since only bytes can be sent over the socket, the programmer needs to manually serialize and deserialize internal program structures and variables to transmit them. Besides this, raw TCP is only really suited for continuous data streams, while many applications require event-based bidirectional communication where messages (blocks of data with clear boundaries) are sent back and fourth.
 
-Providing solutions for these \textcolor{red}{annoyances/problems} is the job of communication frameworks or libraries. A communication framework does not only implement a higher level protocol to support the additional functionality, but also provides programming language functions to integrate the functionality as seamlessly as possible with language features.
+Providing solutions for these \textcolor{red}{annoyances/problems} is the job of communication frameworks. A communication framework does not only implement a higher level protocol to support the additional functionality, but also provides libraries of programming language functions to integrate the functionality as seamlessly as possible with language features.
 
 In summary, they may provide the following services to the user:
 
-\begin{itemize}
+\begin{enumerate}
     \item Abstraction of low-level socket APIs, exposing the most important functionality and automatically handle the rest in the background (according to common use-cases) including but not limited to:
     \begin{itemize}
         \item Automatic management of connection state, handling disconnects and reconnects
@@ -89,16 +176,77 @@ In summary, they may provide the following services to the user:
     \item Provide a way to exchange messages, which are blocks of data of a known (but still possibly dynamic) length, guaranteeing arrival in same grouping and order as sent
     \item Provide facilities to serialize and deserialize language-native data structures to easily send them over the network (with the least code possible)
     \item Provide data validation for sent and received messages according to programmer defined schemas (in language native format as far as possible), so the user code can trust received data to be in valid format.
-    \item Provide additional, commonly used communication schemes such as Remote Procedure Calls (RPCs) that further simplify common use cases of network communication for the developer
-\end{itemize}
+    \item Provide additional, commonly used communication schemes such as metadata exchange or Remote Procedure Calls (RPCs) that further simplify common use cases of network communication for the developer
+\end{enumerate}
+
 
 \section{State of the Art}
 
-\begin{itemize}
-    \item TCP \& UDP (mostly TCP) for low-level, very performant systems
-    \item WebSockets: Implements an additional protocol on top of TCP re-introducing the concept of messages. For Web applications already using HTTP(s)
-    \item SocketIO: Builds on top of WebSocket, allows sending javascript events over the network, adding event listeners/emitters and allow sending arbitrary data.
-\end{itemize}
+There are many different network protocols and accompanying frameworks building on top of the above described, which solve different problems depending on the application requirements. Not all of them will be described in this paper.
+
+The following section explains a typical protocol stack used for web apps, since this is one of the original primary use cases for the work introduced in this paper. Since web browsers offer only limited to no access to system socket APIs, which already defines a large part of the protocol stack used.
+
+That being said, the following is the protocol stack used as a starting point for the improvements described later:
+
+\subsection{Transmission Control Protocol (TCP)}
+
+\textbf{TCP} as the underlying transportation layer. In an end-user application, this would typically only be used directly if a very high performance custom application protocol is key.
+
+
+\subsection{Hyper Text Transfer Protocol (HTTP)}
+
+\textbf{HTTP} builds on top of TCP. This protocol is used to transmit files and other chunks of data (such as JSON documents) between servers or between servers and a browser. One limitation is that HTTP is (mostly) unidirectional communication. HTTP works by the client connecting to a server using TCP and then sending an \textbf{HTTP Request}. The request consists of at least one line of human readable text denoting the requested resource (like an HTML file) and some optional parameters, called headers. The end of the request is identified by a CRLF sequence (an empty line of text). Depending on the request details, the server may then answers with some status code, response headers and finally the requested data.
+
+There are libraries for most programming languages, allowing the programmer to send and listen for HTTP request with very little code, varying depending on language.
+
+\begin{code-js}
+// JavaScript
+let resp = await fetch("http://10.5.5.5/");
+\end{code-js}
+
+By automatically handling TCP connection establishment and implementing a way to transfer connection metadata and status codes, HTTP already implements parts of point 1) and 5) of the before mentioned goals for a communication framework.
+
+
+\subsection{WebSockets}
+
+\textbf{WebSockets} are a bidirectional communication protocol building on top of and somewhat besides HTTP. A WebSocket works by first establishing a TCP connection and sending an HTTP request to a server. However instead of requesting or transmitting a resource directly, the client requests the server to change the protocol on top of the already open TCP socket to the WebSocket protocol using HTTP protocol upgrade headers. Since browsers don't allow web pages and web applications to create TCP sockets directly, this is the only way to create a long-term bidirectional communication channel between the browser and a server application. 
+
+The WebSocket protocol however doesn't expose the raw stream socket to the programmer, instead it introduced the concept of messages, hereby implementing point 2) of the goals for a communication framework. A message is a self contained chunk of data (typically a string, raw binary is also possible) the transmission of which over the socket is transparent to the user. When the programmer sends messages, they guaranteed to arrive at the other communication party in one piece and in order in a message handler.
+
+Like with HTTP, many languages provide simple APIs to create and use WebSocket connections.
+
+\begin{code-js}
+// JavaScript
+// connect
+let socket = new WebSocket("ws://10.5.5.5/");
+// send message
+socket.send("hello");
+// receive message
+socket.onmessage = (e) => {
+    console.log(e.data);
+}
+\end{code-js}
+
+
+\subsection{Socket.IO}
+
+\textbf{Socket.IO} again builds on top of WebSockets and is the last protocol in the here-described stack. Socket.IO works on the principle of sending events over the network. An event can be imagined like a message consisting of an \textbf{event name} and some \textbf{event data}. Events are identified by their name and there can be multiple different event names in an active connection. As soon as the connection between the server and client is established, both sides can \textbf{emit} and \textbf{listen} for events identified by their name. Listening works by registering callback (handler) functions, to be called when a specific event is received (i.e. emitted by the other communication party). When emitting an event, one can also send some additional data with it, which will be passed to the listener functions.
+
+Thanks to support libraries for multiple programming languages, Socket.IO also provides the functionality to serialize and deserialize the data to language-native structures (at least for some languages) and therefore partially satisfies goal 3). All this functionality can be achieved with very little code.
+
+\begin{code-js}
+// JavaScript client connect
+const socket = io("ws://10.5.5.5");
+// emit event
+socket.emit("myevent", "some", [47, "data"]);
+// listen for event
+socket.on("event2", (arg1, arg2, ...) => {
+    console.log("event2:", arg1, arg2);
+})
+\end{code-js}
+
+Socket.IO also further implements the abstractions outlined by goal 1) of a communication framework, by implementing automatic connection state management and reconnects. Where with WebSockets, the programmer explicitly needs to write code to \textbf{connect to a server},  \textbf{detect disconnects}, and repeat the procedure, with Socket.IO, the programmer is merely required to tell the computer to \textbf{"be connected to a specified server"}. The library will then connect, detect failures and reconnect automatically to satisfy this request.
+
 
 \section{Problems with current offer}
 
