@@ -327,10 +327,10 @@ Unlike Socket.IO, msglink requires this link to be fully defined in a static man
 
 In msglink, both communication parties have to define the link from their perspective of the communication. This means for example, that an incoming event on one side has to have a matching outgoing event on the other side. When connecting, msglink performs a link-compatibility check, to make sure both parties have defined a compatible protocol. If the two links are not compatible, the connection is aborted before trying to sending any user data.
 
-One of the goals for msglink is, to keep the definition of this link entirely native to the language, so no extra build step is required to generate code from the definition. This has the slight disadvantage of possibly having to write the same schemas with two different syntaxes. 
+One of the goals for msglink is to keep the definition of this link entirely native to the respective language, so no extra build step is required to generate code from the definition. This has the slight disadvantage of possibly having to write the same schemas with two different syntaxes. 
 
 
-\subsection{Party equality}
+\subsection{Communication party equality}
 
 In msglink, both communication parties (client and server) are treated equally. Apart from a few internal details, after a msglink connection is established, both parties can perform the exact same actions, in the bounds of what is defined by the link.
 
@@ -342,7 +342,7 @@ msglink defines three commonly used communication primitives that a programmer c
 \begin{itemize}
     \item \textbf{Events} work in the same way as they do with Socket.IO, with the exception of having to define them and their data structure statically.
     \item \textbf{Remote Function Calls} can be viewed as two events with opposite directions. One "call" event and one "result" event. RFCs work as the name implies. One the called (receiving) side of the communication defines a function taking some input data (statically defined by schema) and returning some result data (also defined by a schema). Since a traditional function cannot yield multiple results, there can only be one handler function. The other side of the communication can remotely call the function over the network, efficiently using asynchronous abilities of a language if available so the remote function call can be used almost as seamlessly as a local one. The framework automatically handles the matching of results to pending calls so data is not mixed up. Other framework typically call these Remote Procedure Calls (RPCs), though "function" was chosen for msglink as it clarifies the fact that the call always yields some result data.
-    \item \textbf{Data Sources} can be imagined as functions which can be called with some initial input data, that can follow up with more results over time until canceled. This might seem confusing at first, but it is useful for implementing dynamic subscription models. This is best explained using an example: \textit{A web dashboard manages 100 servo actuators and needs to display live updates of their positions. Always transmitting the position of each results is too much traffic. Since only 5 can be displayed on screen at a time, a protocol needs to be implemented to activate or deactivate the updates for each when shown or hidden.} This could be implemented manually using a "sub", "unsub" and "update" event, providing the actuator ID in the "update" event. msglink abstracts and standardizes this however. In the UI component requiring the data of a specific actuator, a data source listener could be registered with the actuator ID as an input argument. This can be imagined as the function being called with the actuator ID as a parameter, and the function then following up with a new result event every time the actuator position updates.
+    \item \textbf{Data Sources} can be imagined as functions which can be called with some initial input data, that can follow up with more results over time until canceled. This might seem confusing at first, but it is useful for implementing dynamic subscription models. This is best explained using an example: \textit{A web dashboard manages 100 servo actuators and needs to display live updates of their positions. Always transmitting the position of each results is too much traffic. Since only 5 can be displayed on screen at a time, a protocol needs to be implemented to activate or deactivate the updates for each when shown or hidden.} This could be implemented manually using a "sub", "unsub" and "update" event, providing the actuator ID in the "update" event. msglink abstracts and standardizes this however. In the UI component requiring the data of a specific actuator, a data source listener could be registered with the actuator ID as an input argument. This can be imagined as the function being called with the actuator ID as a parameter, and the function then following up with a new result event every time the actuator position updates. Although the function can be used as an illustration, it is important to understand that the initial "function call" when adding a subscriber with specific input parameters is not intended to execute code on the other parties system which is call-time dependant. It is merely a way to "enable" this data source.
 \end{itemize}
 
 
@@ -352,12 +352,28 @@ At the time of writing, the msglink protocol uses JSON to encode it's internal m
 
 Never the less, msglink tries to perform the communication as efficiently as possible by only transmitting data over the network that is actually required. For example, the msglink framework internally tracks whether an event currently has any listeners and informs the other communication party if there are any. If there are no listeners, the event doesn't need to be transmitted over the network, even if one is emitted. A similar concept applies to data sources.
 
+Data sources can be optimized further. If there are multiple data source "subscribers" with the same request parameters, the request doesn't need to be sent to the server multiple times, and there is no need to send value updates multiple times. The framework can detect when there is already an active data source with the same input parameters and simply use it's update messages until there are no subscribers anymore, at which point the source can be disabled.
+
 
 \section{Results and Applications}
 
+msglink is the result of solving very specific problems for a very specific use case. Nevertheless, since it uses widely supported web technologies as it's backbone, it can be easily integrated wherever and expanded with whatever uses these technologies. Examples would be a HTTP reverse proxy to add SSL encryption.  
+
+Thanks to the rather general API and structure, msglink is useful for potentially many scenarios ranging from server-client communication in UI applications (web and local) to games to data exchange between servers to data exchange between robots in Botball.
+
+
 \section{Limitations}
 
+Since msglink uses WebSockets as an underlying transport layer, a rather inefficient JSON encoding for serialization and is an internally rather complex protocol to manage, speed is not one of it's strengths. As mentioned in the protocol stackup, a more lower-level protocol like TCP or UDP directly is required for high-performance applications, trading speed for convenience.
+
+A further limitation is the point-to-point nature of the framework. There always needs to be a msglink client connected to a msglink server, although a server can simultaneously have connections to multiple clients and can therefore distribute messages between them. At this time, it is not planned to directly implement support for broadcast or multicast communication into msglink, even on the server side, since this was not part of the original goal. For applications where many hosts need to communicate with each other directly in a mesh-like topology, there are other protocols better suited for the purpose that don't have the limitation of the browser. An example is the DDS which is used by ROS2 (Robot Operating System 2) and is therefore common in robotics.
+
+
 \section{Conclusion}
+
+msglink satisfies all the goals defined in this paper for it's specific use case and allows building new, innovative applications quicker without worrying about communication.
+
+msglink is an open source project which can currently be viewed and contributed to as part of the \textbf{melektron/el-std} library on GitHub. At the time of writing, msglink is still in the development phase and has not been fully implemented in multiple languages yet. The C++ library is the most developed at this time, with TypeScript and Python following very soon.
 
 
 
