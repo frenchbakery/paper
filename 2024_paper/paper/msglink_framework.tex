@@ -155,10 +155,9 @@ UDP stands for \textbf{User Datagram Protocol}. Unlike TCP, UDP does not require
 
 UDP is less reliable than TCP. Before choosing a respective protocol one has to decide if they need speed or reliability more. A common uses for UDP are videos whereas a common use for TCP are websites.
 
-
-
 From here on, this paper will focus on point-to-point communication between two hosts, although many of the concepts described later are also applicable to \textcolor{red}{multicast communication}.
 For this reason, it will focus on higher-level protocols and frameworks based on TCP from here-on out.
+
 
 \subsection{Communication frameworks}
 
@@ -215,7 +214,7 @@ By automatically handling TCP connection establishment and implementing a way to
 
 The WebSocket protocol however doesn't expose the raw stream socket to the programmer, instead it introduced the concept of messages, hereby implementing point 2) of the goals for a communication framework. A message is a self contained chunk of data (typically a string, raw binary is also possible) the transmission of which over the socket is transparent to the user. When the programmer sends messages, they guaranteed to arrive at the other communication party in one piece and in order in a message handler.
 
-Like with HTTP, many languages provide simple APIs to create and use WebSocket connections. \cite{b3}
+Like with HTTP, many languages provide simple APIs to create and use WebSocket connections. 
 
 \begin{code-js}
 // JavaScript
@@ -228,7 +227,7 @@ socket.onmessage = (e) => {
     console.log(e.data);
 }
 \end{code-js}
-
+\cite{b3}
 
 \subsection{Socket.IO}
 
@@ -262,13 +261,13 @@ Although this protocol stack satisfies the most important goals listed, it still
         \item keep a list of open requests to handle responses once received.
     \end{itemize}
     Since the implementation is the same every time and is potentially needed many times in an application, it should be abstracted by the framework.
-    \item While Socket.IO provides a very clean and feature-complete API for some programming languages (like Python and JavaScript), it doesn't to so for others, like C++ which is only supported for clients. While there are libraries to create C++ WebSocket servers and clients (like websocket++ which is used in this paper), they require a lot of code (to some part due to the nature of the language) and tedious state management when used directly. Additionally, the event system would need to be implemented manually for every event every time which is tedious.
+    \item While Socket.IO provides a very clean and feature-complete API for some programming languages (like Python and JavaScript), it doesn't to so for others, like C++ which is only supported for clients. While there are libraries to create C++ WebSocket servers and clients (like websocket++ which is used in this paper), they require a lot of code (to some part due to the nature of the language) and tedious state management when used directly. Additionally, the event system would need to be implemented manually for every event every time which is tedious. \cite{b4}
     \item The data serialization and deserialization of Socket.IO is fully dynamic, meaning that before an event is actually processed, the code cannot possibly know the structure of the event data. This presents multiple problems:
     \begin{itemize}
         \item Deserialization of event data to language-native data structures is impossible for statically typed languages like C++, which \textcolor{red}{nullifies (bad wording?)} the benefits of static typing. It requires the use of dynamic containers like maps to represent objects with strings as attribute names. Since the containers need to be fully dynamic, the programmer first needs to write code to check if an expected attribute exists, assert its's type and finally convert it to the representative language-native type.
         \item Even in dynamic languages like JavaScript where objects can have dynamic attributes and variables are dynamically typed, it is still necessary or at least helpful to perform the same validation to provide adequate error handling and avoid unexpected behaviors. There are also additional systems (TypeScript for JS and type hints for Python) that provide the benefits of static typing even though the underlying language is dynamic. An example is rich IntelliSense editor support to avoid typos in attribute names.
     \end{itemize}
-    Since validation should always be performed (expect when explicitly specifying a type to be unknown), it should be abstracted by the communication framework. Instead of the programmer having to write the validation code, the programmer will define the structure of the expected value in a language native format as far as possible (structures in C++, Zod schemas in JS/TS). The framework is then responsible for performing the validation, so data reaching the user's code is guaranteed to have the expected structure.
+    Since validation should always be performed (expect when explicitly specifying a type to be unknown), it should be abstracted by the communication framework. Instead of the programmer having to write the validation code, the programmer will define the structure of the expected value in a language native format as far as possible (structures in C++, Zod schemas in JS/TS). The framework is then responsible for performing the validation, so data reaching the user's code is guaranteed to have the expected structure. \cite{b2}
 \end{enumerate}
 
 
@@ -354,7 +353,6 @@ Never the less, msglink tries to perform the communication as efficiently as pos
 
 Data sources can be optimized further. If there are multiple data source "subscribers" with the same request parameters, the request doesn't need to be sent to the server multiple times, and there is no need to send value updates multiple times. The framework can detect when there is already an active data source with the same input parameters and simply use it's update messages until there are no subscribers anymore, at which point the source can be disabled.
 
-
 \section{Results and Applications}
 
 msglink is the result of solving very specific problems for a very specific use case. Nevertheless, since it uses widely supported web technologies as it's backbone, it can be easily integrated wherever and expanded with whatever uses these technologies. Examples would be a HTTP reverse proxy to add SSL encryption.  
@@ -384,9 +382,9 @@ msglink is an open source project which can currently be viewed and contributed 
 
     \bibitem{b1} Information for Socket.io, URL:https://socket.io/
     \bibitem{b2} Information for Zod, URL:https://zod.dev/
-    \bibitem{b3} Information for WebSocket++, URL: https://docs.websocketpp.org/ 
-    https://github.com/zaphoyd/websocketpp/
-
+    \bibitem{b3} Websocket standart, URL:  https://www.rfc-editor.org/rfc/rfc6455.html
+    \bibitem{b4} Information for WebSocket++, URL: https://github.com/zaphoyd/websocketpp/
+    
 \end{thebibliography}
 
 \end{document}
