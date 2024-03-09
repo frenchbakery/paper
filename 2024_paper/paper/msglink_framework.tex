@@ -274,12 +274,17 @@ Although this protocol stack satisfies the most important goals listed, it still
 
 \section{Solution and Design Overview}
 
-To solve the before mentioned problems, and implement the last missing goals, the top-level protocol in the stack (Socket.IO) will be replaced by a new protocol which has been named \textbf{msglink}.
+To solve the before mentioned problems, and implement the last missing goals, the top-level protocol in the stack (Socket.IO) will be replaced by a new protocol with language support libraries which has been named \textbf{msglink}.
 
 msglink will build on top of WebSockets, implementing all features of Socket.IO that are relevant to achieve the listed goals. In addition it will add direct framework support for more commonly used communication schemes.
 
-This section will cover the core principles of the msglink protocol and how it solves the problems and implements the goals listed above.
+This section will cover the core principles of the msglink framework and how it solves the problems and implements the goals listed above.
 
+\subsection{Simple API}
+
+Similar to the protocols and accompanying libraries listed above (especially Socket.IO), msglink tries to achieve it's core functionality with the least code possible using a declarative API. Rather than writing code explicitly stating how to perform the serialization, validation or communication step-by-step (imperative programming), the developer writes code specifying (declaring) what result is expected (declarative programming).
+
+Like Socket.IO, to connect an msglink client to a server, one only has to specify 
 
 \section{Implementation}
 
