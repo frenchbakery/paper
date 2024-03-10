@@ -13,6 +13,8 @@
 %\usepackage{etoolbox}  % needed for number detection, but didn't work reliably
 % for URLs
 \usepackage{url}
+%used to to get the \hl{text} command for highlighting text - used by markus for feedback
+\usepackage{soul}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -23,6 +25,7 @@
 \definecolor{code-string}{HTML}{60A14F}
 \definecolor{code-number}{HTML}{986801}
 \definecolor{code-comment}{HTML}{A0A1A7}
+
 
 % definition to detect numbers
 
@@ -139,11 +142,11 @@ When it comes to computer science and robotics, sooner or later, multiple comput
 
 There are two main protocols on top of IP for user applications - TCP and UDP. 
 
-TCP stands for \textbf{Transmission Control Protocol} and is a connection based protocol, meaning there will be a standing connection between two hosts. Before any data can be sent over TCP, a connection has to be established during an initial handshake between both communication parties. This is done automatically in the background. Once established, a TCP connection provides a pipe-like environment for transmitting a continuous stream of data bytes. The data sent is guaranteed to be received in the same order (without missing bytes in between). However, since TCP "streams" bytes, it does guarantee that any block of bytes sent at once is received in one piece.
+TCP stands for \textbf{Transmission Control Protocol} and is a connection based protocol, meaning there will be a standing connection between two hosts. Before any data can be sent over TCP, a connection has to be established during an initial handshake between both communication parties. This is done automatically in the background. Once established, a TCP connection provides a pipe-like environment for transmitting a continuous stream of data bytes. The data sent is guaranteed to be received in the same order (without missing bytes in between). However, since TCP "streams" bytes, it does guarantee that any segment (group of bytes) sent with one system call is received in one piece.
 
-UDP stands for \textbf{User Datagram Protocol}. Unlike TCP, UDP does not require a connection to be established. UDP merely sends a block of data (user datagrams) all at once to a destination host within a single IP packet. There is no guarantee that the packet reaches the destination. 
+UDP stands for \textbf{User Datagram Protocol}. Unlike TCP, UDP does not require a connection to be established. UDP merely sends a segment of data (user datagrams) to a destination host within a single IP packet. There is no guarantee that the packet reaches the destination. 
 
-From here on, this paper will focus on reliable point-to-point communication between two hosts (although many of the concepts described later are also applicable to multicast communication) and on higher-level protocols and frameworks based on TCP.
+From here on, this paper will focus on reliable point-to-point communication between two hosts and on higher-level protocols and frameworks based on TCP (although many of the concepts described later are also applicable to multicast communication).
 
 
 \subsection{Communication frameworks}
@@ -152,13 +155,13 @@ While TCP communication is the basis of many point-to-point networking applicati
 
 Providing solutions for these annoyances is the job of communication frameworks. A communication framework does not only implement a higher level protocol to support the additional functionality, but also provides libraries of programming language functions to integrate the functionality as seamlessly as possible with language features.
 
-The work described in this paper aims to create a communication framework to solve problems for a rather specific set of requirements:
+The work described in this paper aims to create a communication framework with the following set of goals:
 
 \begin{enumerate}
     \item Abstraction of low-level socket APIs, exposing the most important functionality with little code and automatically handle the rest in the background (according to common use-cases) including but not limited to automatic management of connection state, handling disconnects and reconnects
     \item Provide a way to exchange messages, which are blocks of data of a known (but still possibly dynamic) length, guaranteeing arrival in same grouping and order as sent
     \item Provide facilities to serialize and deserialize language-native data structures to easily send them over the network with the least code possible
-    \item Provide data validation for sent and received messages according to programmer defined schemas (in language native format as far as possible), so the user code can trust received data to be in valid format.
+    \item Provide data validation for sent and received messages according to programmer defined schemas (in language native format as far as possible), so the user code can trust, that received data will be in the expected format.
     \item Provide additional, commonly used communication schemes and primitives such as metadata exchange or Remote Procedure Calls (RPCs). These further simplify common practices within network communication for the developer
 \end{enumerate}
 
@@ -167,17 +170,17 @@ The work described in this paper aims to create a communication framework to sol
 
 There are many different network protocols and accompanying frameworks building on top of TCP, which solve different problems depending on the application requirements. Not all of them will be described in this paper.
 
-The following section explains a typical protocol stack used for web apps, since one of the original primary use-cases of the work described in this paper is the communication between a single-page web-app and a high performance, low level server written in C++. This is used to implement (among other uses) the touchscreen UI to control FrenchBakery robots for the Botball competition. Since web browsers offer limited to no access to system socket APIs, a large part of the protocol stack is already defined.
+The following section explains a typical protocol stack used for web apps, since one of the original primary use-cases of the work described in this paper is the communication between a single-page web-app and a high performance, low level server written in C++. This is used to implement (among other uses) the touchscreen UI to control FrenchBakery robots for the Botball competition. Since web browsers offer limited to no access to system socket APIs, a large part of the selected protocol stack is already defined by what browser APIs offer.
 
 
 \subsection{Transmission Control Protocol (TCP)}
 
-\textbf{TCP} as the underlying transportation layer. In an end-user application, this would typically only be used directly if a very high performance custom application protocol is key.
+\textbf{TCP} is selected as the underlying transportation layer. In an end-user application, this would typically only be used directly if a very high performance custom application protocol is key.
 
 
 \subsection{Hyper Text Transfer Protocol (HTTP)}
 
-\textbf{HTTP} builds on top of TCP. This protocol is used to transmit files and other chunks of data (such as JSON documents) between servers or between servers and a browser. One limitation is that HTTP is (mostly) unidirectional. HTTP works by the client connecting to a server using TCP and then sending an \textbf{HTTP Request}. The end of the request is identified by a CRLF sequence (an empty line of text). Depending on the request details, the server may then answers with some status code, response headers and finally the requested data. \cite{http-mdn}
+\textbf{HTTP} builds on top of TCP. This protocol is used to transmit files and other chunks of data (such as JSON documents) between servers or between servers and a browser. One limitation is that HTTP is (mostly) unidirectional. HTTP works by the client connecting to a server using TCP and then sending an \textbf{HTTP Request}. The end of the request is identified by a CRLF sequence (an empty line of text). Depending on the request details, the server may then answer with some status code, response headers and finally the requested data. \cite{http-mdn}
 
 There are libraries for most programming languages, allowing the programmer to send and listen for HTTP request with very little code, varying depending on language.
 
@@ -193,7 +196,7 @@ By automatically handling TCP connection establishment and implementing a way to
 
 \textbf{WebSockets} are a bidirectional communication protocol building on top of and somewhat besides HTTP. A WebSocket works by first establishing a TCP connection and sending an HTTP request to a server. However instead of requesting or transmitting a resource directly, the client requests the server to change the protocol on top of the already open TCP socket to the WebSocket protocol using HTTP protocol upgrade headers. Since browsers don't allow web pages and web applications to create TCP sockets directly, this is the only way to create a long-term bidirectional communication channel between the browser and a server application. \cite{b3}
 
-The WebSocket protocol however doesn't expose the raw stream socket to the programmer, instead it introduced the concept of messages, hereby implementing point 2) of the goals for a communication framework. A message is a self contained chunk of data (typically a string, raw binary is also possible) the transmission of which over the socket is transparent to the user. When the programmer sends messages, they are guaranteed to arrive at the other communication party in one piece and in order. \cite{b3}
+The WebSocket protocol however doesn't expose the raw stream socket to the programmer, instead it introduces the concept of messages, hereby implementing point 2) of the goals for a communication framework. A message is a self contained chunk of data (typically a string, raw binary is also possible) the transmission of which over the socket is transparent to the user. When the programmer sends messages, they are guaranteed to arrive at the other communication party in one piece and in order. \cite{b3}
 
 Like with HTTP, many languages provide simple APIs to create and use WebSocket connections.
 
@@ -231,12 +234,12 @@ socket.on("event2", (arg1, arg2, ...) => {
 Socket.IO also further implements the abstractions outlined by goal 1) of a communication framework, by implementing automatic connection state management and reconnects. Where with WebSockets the programmer explicitly needs to write code to \textbf{connect to a server},  \textbf{detect disconnects}, and repeat the procedure, with Socket.IO the programmer is merely required to tell the computer to \textbf{"be connected to a specified server"}. The library will then connect, detect failures and reconnect automatically to satisfy this request. 
 
 
-\section{Problems with current offer}
+\section{Problems with current stack}
 
-Although this protocol stack satisfies the most important goals listed, it still has some problems to be solved, namely the following:
+Although this protocol stack satisfies the most important goals listed, it still has the following problems:
 
 \begin{enumerate}
-    \item While the event system provided by Socket.IO is useful for many applications, sometimes responses to events are required. This is often times named a \textbf{Remote Procedure Call} and needs to be implemented manually for every event:
+    \item While the event system provided by Socket.IO is useful for many applications, sometimes responses to events are required. This is typically named a \textbf{Remote Procedure Call} and needs to be implemented manually for every event:
     \begin{itemize}
         \item define and keep track of a separate request and response event
         \item add an identifying element to request and response data to identify which response belongs to which request and prevent mixing up responses if multiple requests are sent out in short succession
@@ -329,7 +332,7 @@ msglink defines three commonly used communication primitives that a programmer c
 
 \begin{itemize}
     \item \textbf{Events} work in the same way as they do with Socket.IO, with the exception of having to define them and their data structure statically.
-    \item \textbf{Remote Function Calls (RFC)} can be viewed as two events with opposite directions. One "call" event and one "result" event. RFCs work as the name implies. The called (receiving) side of the communication defines a function taking some input data (statically defined by schema) and returning some result data (also defined by a schema). Since a traditional function cannot yield multiple results, there can only be one such handler function. The other side of the communication can remotely call the function over the network, using asynchronous abilities of a language if available. This way, the remote function call can be used almost as seamlessly as a local one. The framework automatically handles the matching of results to pending calls so data is not mixed up. 
+    \item \textbf{Remote Function Calls (RFCs)} can be viewed as two events with opposite directions. One "call" event and one "result" event. RFCs work as the name implies. The called (receiving) side of the communication defines a function taking some input data (statically defined by schema) and returning some result data (also defined by a schema). Since a traditional function cannot yield multiple results, there can only be one such handler function. The other side of the communication can remotely call the function over the network, using asynchronous abilities of a language if available. This way, the remote function call can be used almost as seamlessly as a local one. The framework automatically handles the matching of results to pending calls so data is not mixed up. 
 
     Other frameworks typically call this scheme "Remote Procedure Call" (RPCs), though "function" was chosen for msglink as it clarifies the fact that the call always yields some result data.
     \item \textbf{Data Sources} can be imagined as functions which can be called with some initial input data, that can follow up with more results over time until canceled. This might seem confusing at first, but it is useful for implementing \textbf{dynamic subscription models}. This is best explained using an example: \textit{A web dashboard manages 100 servo actuators and needs to display live updates of their positions. Always transmitting the position of each results is too much traffic. Since only 5 can be displayed on screen at a time, a protocol needs to be implemented to activate or deactivate the updates for each when shown or hidden.} This could be implemented manually using a "sub", "unsub" and "update" event, providing the actuator ID in the "update" event.
@@ -350,7 +353,7 @@ Data sources can be optimized further. If there are multiple data source "subscr
 
 msglink is the result of solving very specific problems for a very specific use case. Nevertheless, since it uses widely supported web technologies as it's backbone, it can be easily integrated and expanded with whatever uses these technologies. Examples would be an HTTP reverse proxy to add SSL encryption.
 
-The following is a compressed code example of how one might define a msglink link in C++. The explanation of the code example is beyond the scope of this paper.
+The following is a compressed code example of how one might define a msglink link in C++, which is significantly shorter than implementing a comparable solution manually using WebSocket++. The explanation of the code example is beyond the scope of this paper.
 
 \begin{code-cpp}
 // structure name is event name
@@ -385,7 +388,7 @@ Thanks to the rather general API and structure, msglink is useful for potentiall
 
 Since msglink uses WebSockets as an underlying transport layer, a rather inefficient JSON encoding for serialization and is an internally rather complex protocol to manage, speed is not one of it's strengths. As mentioned in the protocol stackup, directly using a more lower-level protocol like TCP or UDP is required for high-performance applications, trading convenience for speed.
 
-A further limitation is the point-to-point nature of the framework. There always needs to be a msglink client connected to a msglink server, although a server can simultaneously have connections to multiple clients and can therefore distribute messages between them. At this time, it is not planned to directly implement support for broadcast or multicast communication into msglink, even on the server side (which Socket.IO does support), since this was not part of the original goal. For applications where many hosts need to communicate with each other directly in a mesh-like topology, there are other protocols better suited for the purpose that don't have the limitation of the browser. An example is DDS which is used by ROS2 (Robot Operating System 2) and is therefore common in robotics.
+A further limitation is the point-to-point nature of the framework. There always needs to be a msglink client connected to a msglink server, although a server can simultaneously have connections to multiple clients and can therefore distribute messages between them. At this time, it is not planned to directly implement support for broadcast or multicast communication into msglink, even on the server side (which Socket.IO does support), since this was not part of the original goal. For applications where many hosts need to communicate with each other directly in a mesh-like topology, there are other protocols better suited for the purpose that don't have the limitation of the browser. An example is the \textbf{Data Distribution Serivce (DDS)} which is used by ROS2 (Robot Operating System 2) and is therefore common in robotics.
 
 
 \section{Conclusion}
