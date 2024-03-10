@@ -248,7 +248,7 @@ Although this protocol stack satisfies the most important goals listed, it still
     \item While Socket.IO provides a very clean and feature-complete API for some programming languages (like Python and JavaScript), it doesn't do so for others like C++ which is only supported for clients. While there are libraries to create C++ WebSocket servers and clients (like websocket++ which is used in this paper), they require a lot of code (to some part due to the nature of the language) and tedious state management when used directly. Additionally, the event system would need to be implemented manually for every event every time, which is tedious. \cite{b4}
     \item The data serialization and deserialization of Socket.IO is fully dynamic, meaning that before an event is actually processed, the code cannot possibly know the structure of the event data. This presents multiple problems:
     \begin{itemize}
-        \item Deserialization of event data to language-native data structures is impossible for statically typed languages like C++, which negates the benefits of static typing. It requires the use of dynamic containers like maps to represent objects with strings as attribute names. Since the containers need to be fully dynamic, the programmer first needs to write code to check if an expected attribute exists, assert its's type and finally convert it to the representative language-native type, which is tedious.
+        \item Deserialization of event data to language-native data structures is impossible for statically typed languages like C++, which negates the benefits of static typing. It requires the use of dynamic containers like maps to represent objects with strings as attribute names. Since the containers need to be fully dynamic, the programmer first needs to write code to check if an expected attribute exists, assert its type and finally convert it to the representative language-native type, which is tedious.
         \item Even in dynamic languages like JavaScript where objects can have dynamic attributes and variables are dynamically typed it is still helpful to perform the same validation in order to provide adequate error handling and avoid unexpected behaviors. There are also additional systems (TypeScript for JS and type hints for Python) that provide the benefits of static typing (such as rich IntelliSense) even though the underlying language is dynamic.
     \end{itemize}
 \end{enumerate}
@@ -283,7 +283,7 @@ This section will cover how the the core principles of the msglink framework wor
 
 \subsection{Simple API}
 
-Similar to the protocols and accompanying libraries listed above (especially Socket.IO), msglink tries to achieve it's core functionality with the least code possible using a declarative API. Rather than writing code explicitly stating how to perform the serialization, validation or communication step-by-step (imperative programming), the developer writes code specifying (declaring) what result is expected (declarative programming). \cite{imperative-vs-declarative}
+Similar to the protocols and accompanying libraries listed above (especially Socket.IO), msglink tries to achieve its core functionality with the least code possible using a declarative API. Rather than writing code explicitly stating how to perform the serialization, validation or communication step-by-step (imperative programming), the developer writes code specifying (declaring) what result is expected (declarative programming). \cite{imperative-vs-declarative}
 
 Like Socket.IO, to connect a msglink client to a server, one only has to specify what server the client should \textbf{be connected to} and the library will automatically handle connection and reconnection in case of connection loss. 
 
@@ -386,14 +386,14 @@ Thanks to the rather general API and structure, msglink is useful for potentiall
 
 \section{Limitations}
 
-Since msglink uses WebSockets as an underlying transport layer, a rather inefficient JSON encoding for serialization and is an internally rather complex protocol to manage, speed is not one of it's strengths. As mentioned in the protocol stackup, directly using a more lower-level protocol like TCP or UDP is required for high-performance applications, trading convenience for speed.
+Since msglink uses WebSockets as an underlying transport layer, a rather inefficient JSON encoding for serialization and an internally rather complex protocol to manage, speed is not one of its strengths. As mentioned in the protocol stackup, directly using a more lower-level protocol like TCP or UDP is required for high-performance applications, trading convenience for speed.
 
 A further limitation is the point-to-point nature of the framework. There always needs to be a msglink client connected to a msglink server, although a server can simultaneously have connections to multiple clients and can therefore distribute messages between them. At this time, it is not planned to directly implement support for broadcast or multicast communication into msglink, even on the server side (which Socket.IO does support), since this was not part of the original goal. For applications where many hosts need to communicate with each other directly in a mesh-like topology, there are other protocols better suited for the purpose that don't have the limitation of the browser. An example is the \textbf{Data Distribution Serivce (DDS)} which is used by ROS2 (Robot Operating System 2) and is therefore common in robotics.
 
 
 \section{Conclusion}
 
-msglink satisfies all the goals defined in this paper for it's specific use case and allows building new, innovative applications quicker without worrying about communication.
+msglink satisfies all the goals defined in this paper for its specific use case and allows building new, innovative applications quicker without worrying about communication.
 
 msglink is an open source project which can currently be viewed and contributed to as part of the \textbf{melektron/el-std} library on GitHub (branch "msglink\_dev"). At the time of writing, msglink is still in the development phase and has not been fully implemented in multiple languages yet. The C++ library is the most developed at this time, with TypeScript and Python following very soon. \cite{el-std-gh}
 
